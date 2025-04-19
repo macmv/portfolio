@@ -1,12 +1,15 @@
 import { useState } from "preact/hooks";
 import { Header } from "./components/Header";
 import "./app.css";
+import { currentPage, Router } from "./components/Link";
 
 export function App() {
   return (
     <div class="wrapper">
-      <Header />
-      <Content />
+      <Router>
+        <Header />
+        <Content />
+      </Router>
     </div>
   );
 }
@@ -24,6 +27,7 @@ const Content = () => {
         <p>
           Edit <code>src/app.tsx</code> and save to test HMR
         </p>
+        Current page is: {currentPage()}
       </div>
     </div>
   );
