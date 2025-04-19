@@ -1,7 +1,8 @@
 import { useState } from "preact/hooks";
 import { Header } from "./components/Header";
 import "./app.css";
-import { currentPage, Link, Router } from "./components/Link";
+import { Link } from "./components/Link";
+import { currentPage, Router } from "./router";
 
 export function App() {
   return (
