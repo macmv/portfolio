@@ -1,12 +1,6 @@
+import { ComponentChildren } from "preact";
 import "./Header.css";
-import { Link } from "./Link";
 
-export const Header = () => {
-  return (
-    <div class="header-wrapper">
-      <Link href="./about">About</Link>
-      <Link href="./skills">Skills</Link>
-      <Link href="./contact">Contact</Link>
-    </div>
-  );
+export const Header = (props: { children: ComponentChildren }) => {
+  return <div class="header-wrapper">{props.children}</div>;
 };

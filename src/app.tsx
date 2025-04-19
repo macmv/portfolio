@@ -1,13 +1,18 @@
 import { useState } from "preact/hooks";
 import { Header } from "./components/Header";
 import "./app.css";
-import { currentPage, Router } from "./components/Link";
+import { currentPage, Link, Router } from "./components/Link";
 
 export function App() {
   return (
     <div class="wrapper">
       <Router>
-        <Header />
+        <Header>
+          <Link href="/">Home</Link>
+          <Link href="/about">About</Link>
+          <Link href="/skills">Skills</Link>
+          <Link href="/contact">Contact</Link>
+        </Header>
         <Content />
       </Router>
     </div>
