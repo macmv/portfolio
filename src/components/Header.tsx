@@ -1,6 +1,6 @@
 import "./Header.css";
 
-export function Header() {
+export const Header = () => {
   return (
     <div class="header-wrapper">
       <a href="./about">About</a>
@@ -8,4 +8,4 @@ export function Header() {
       <a href="./contact">Contact</a>
     </div>
   );
-}
+};
