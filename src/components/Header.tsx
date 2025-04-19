@@ -1,11 +1,12 @@
 import "./Header.css";
+import { Link } from "./Link";
 
 export const Header = () => {
   return (
     <div class="header-wrapper">
-      <a href="./about">About</a>
-      <a href="./skills">Skills</a>
-      <a href="./contact">Contact</a>
+      <Link href="./about">About</Link>
+      <Link href="./skills">Skills</Link>
+      <Link href="./contact">Contact</Link>
     </div>
   );
 };
