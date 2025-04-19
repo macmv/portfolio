@@ -1,7 +1,17 @@
 import { useState } from "preact/hooks";
+import { Header } from "./components/Header";
 import "./app.css";
 
 export function App() {
+  return (
+    <div class="wrapper">
+      <Header />
+      <Content />
+    </div>
+  );
+}
+
+const Content = () => {
   const [count, setCount] = useState(0);
 
   return (
@@ -17,4 +27,4 @@ export function App() {
       </div>
     </div>
   );
-}
+};

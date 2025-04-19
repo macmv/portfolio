@@ -1,7 +1,9 @@
-.content {
-  background-color: #fff;
-  padding: 20px;
+.wrapper {
+  width: 100%;
 }
+
+.content {
+  margin: 20px;
 
 h1 {
   color: #333;

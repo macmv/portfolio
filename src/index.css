@@ -11,3 +11,7 @@ body {
   justify-content: center;
   align-items: center;
 }
+
+#app {
+  width: 100%;
+}
