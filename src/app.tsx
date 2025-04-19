@@ -15,6 +15,23 @@ export function App() {
 }
 
 const Content = () => {
+  switch (currentPage()) {
+    case "/about":
+      return <About />;
+    case "/skills":
+      return <Skills />;
+    case "/contact":
+      return <Contact />;
+    default:
+      return <Home />;
+  }
+};
+
+const Home = () => {
+  return <div>Home</div>;
+};
+
+const About = () => {
   const [count, setCount] = useState(0);
 
   return (
@@ -31,4 +48,11 @@ const Content = () => {
       </div>
     </div>
   );
+};
+
+const Skills = () => {
+  return <div>Many skills</div>;
+};
+const Contact = () => {
+  return <div>Contact me!</div>;
 };
