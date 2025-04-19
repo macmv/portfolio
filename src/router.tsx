@@ -14,7 +14,8 @@ export const currentPage = (): string => {
 };
 
 export const setCurrentPage = (path: string): void => {
-  useContext(PageContext).setCurrentPage(path);
+  window.history.pushState({}, "", path);
+  useContext(PageContext).setCurrentPage(window.location.pathname);
 };
 
 /**

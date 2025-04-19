@@ -13,8 +13,7 @@ export const Link = (props: { href: string; children: string }) => {
       class="link-wrapper"
       href={props.href}
       onClick={(ev) => {
-        window.history.replaceState({}, "", props.href);
-        setCurrentPage(window.location.pathname);
+        setCurrentPage(props.href);
         ev.preventDefault();
         ev.stopPropagation();
       }}
