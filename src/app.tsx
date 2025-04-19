@@ -33,10 +33,6 @@ const Content = () => {
 };
 
 const Home = () => {
-  return <div>Home</div>;
-};
-
-const About = () => {
   const [count, setCount] = useState(0);
 
   return (
@@ -55,6 +51,9 @@ const About = () => {
   );
 };
 
+const About = () => {
+  return <div>About Me</div>;
+};
 const Skills = () => {
   return <div>Many skills</div>;
 };
