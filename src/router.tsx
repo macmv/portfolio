@@ -13,6 +13,10 @@ export const currentPage = (): string => {
   return useContext(PageContext).currentPage;
 };
 
+/**
+ * Sets the current path. Mostly used as an implementation detail for the
+ * `Link` component.
+ */
 export const useSetCurrentPage = () => {
   const { setCurrentPage } = useContext(PageContext);
 
