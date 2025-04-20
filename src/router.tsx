@@ -28,6 +28,10 @@ export const useSetCurrentPage = () => {
 export const Router = (props: { children: ComponentChildren }) => {
   const [currentPage, setCurrentPage] = useState(window.location.pathname);
 
+  window.onpopstate = () => {
+    setCurrentPage(window.location.pathname);
+  };
+
   return (
     <PageContext.Provider value={{ currentPage, setCurrentPage }}>
       {props.children}
