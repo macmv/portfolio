@@ -13,9 +13,13 @@ export const currentPage = (): string => {
   return useContext(PageContext).currentPage;
 };
 
-export const setCurrentPage = (path: string): void => {
-  window.history.pushState({}, "", path);
-  useContext(PageContext).setCurrentPage(window.location.pathname);
+export const useSetCurrentPage = () => {
+  const { setCurrentPage } = useContext(PageContext);
+
+  return (path: string): void => {
+    window.history.pushState({}, "", path);
+    setCurrentPage(window.location.pathname);
+  };
 };
 
 /**
