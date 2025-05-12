@@ -7,8 +7,8 @@
 
 .link-content  {
   background:
-    linear-gradient(to right, #00000000, #00000000),
-    linear-gradient(to right, #00000000, #000000ff);
+    linear-gradient(#00000000, #00000000),
+    linear-gradient(#000000ff, #000000ff);
   background-size: 100% 0.1em, 0 0.1em;
   background-position: 100% 100%, 0% 100%;
   background-repeat: no-repeat;
