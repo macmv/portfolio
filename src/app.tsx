@@ -3,6 +3,7 @@ import { Header } from "./components/Header";
 import "./app.css";
 import { Link } from "./components/Link";
 import { currentPage, Router } from "./router";
+import { Banner } from "./components/Banner";
 
 export function App() {
   return (
@@ -14,6 +15,7 @@ export function App() {
           <Link href="/skills">Skills</Link>
           <Link href="/contact">Contact</Link>
         </Header>
+        <Banner />
         <Content />
       </Router>
     </div>
