@@ -40,7 +40,6 @@ const Home = () => {
 
   return (
     <div class="content">
-      <h1>Neil Macneale</h1>
       <div>
         <button onClick={() => setCount((count) => count + 1)}>
           count is {count}

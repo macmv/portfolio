@@ -1,4 +1,13 @@
 .banner {
-  height: 200px;
+  height: 400px;
   background: #ddd;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+h1 {
+  color: #333;
+  font-size: 64px;
 }
