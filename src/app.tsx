@@ -15,12 +15,25 @@ export function App() {
           <Link href="/skills">Skills</Link>
           <Link href="/contact">Contact</Link>
         </Header>
-        <Banner />
+        <Banner title={currentTitle} />
         <Content />
       </Router>
     </div>
   );
 }
+
+const currentTitle = () => {
+  switch (currentPage()) {
+    case "/about":
+      return "About";
+    case "/skills":
+      return "Skills";
+    case "/contact":
+      return "Contact";
+    default:
+      return "Neil Macneale";
+  }
+};
 
 const Content = () => {
   switch (currentPage()) {
