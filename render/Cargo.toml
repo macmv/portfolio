@@ -7,4 +7,6 @@ edition = "2024"
 crate-type = ["cdylib"]
 
 [dependencies]
+pollster = "0.4.0"
 wasm-bindgen = "0.2.100"
+wgpu = { version = "25.0.0", default-features = false, features = ["webgpu", "wgsl"] }
