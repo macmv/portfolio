@@ -4,6 +4,7 @@ use std::{cell::RefCell, rc::Rc};
 
 use bytemuck::{Pod, Zeroable};
 use nalgebra::{Matrix4, Point3, Vector2, Vector3, vector};
+use rand::{Rng, SeedableRng};
 use wasm_bindgen::prelude::*;
 use wgpu::util::DeviceExt;
 
@@ -226,17 +227,10 @@ async fn setup_instance(canvas: &wgpu::web_sys::HtmlCanvasElement) -> GpuState {
     cache:         None,
   });
 
-  let contents = &[
-    Vertex { pos: [0.0, 0.0, 0.0], things: [1.0, 0.0, 0.0, 1.0] },
-    Vertex { pos: [0.0, 1.0, 0.0], things: [0.0, 1.0, 0.0, 1.0] },
-    Vertex { pos: [1.0, 1.0, 0.0], things: [0.0, 0.0, 1.0, 1.0] },
-    Vertex { pos: [0.0, 0.0, 0.0], things: [1.0, 0.0, 0.0, 1.0] },
-    Vertex { pos: [1.0, 0.0, 0.0], things: [0.0, 1.0, 0.0, 1.0] },
-    Vertex { pos: [1.0, 1.0, 0.0], things: [0.0, 0.0, 1.0, 1.0] },
-  ];
+  let contents = build_terrain();
   let buffer = device.create_buffer_init(&wgpu::util::BufferInitDescriptor {
     label:    None,
-    contents: bytemuck::cast_slice(contents),
+    contents: bytemuck::cast_slice(&contents),
     usage:    wgpu::BufferUsages::VERTEX,
   });
 
@@ -258,7 +252,7 @@ async fn setup_instance(canvas: &wgpu::web_sys::HtmlCanvasElement) -> GpuState {
     perspective: Matrix4::new_perspective(1920.0 / 1080.0, 70.0, 0.1, 10000.0),
 
     buffer,
-    buffer_len: 6,
+    buffer_len: contents.len() as u32,
 
     frames: 0,
   };
@@ -314,9 +308,9 @@ impl GpuState {
     let mut encoder =
       self.device.create_command_encoder(&wgpu::CommandEncoderDescriptor::default());
 
-    let yaw = self.frames as f32 / 100.0;
-    let pos = Point3::new(yaw.cos() * 3.0, 2.0, yaw.sin() * 3.0);
-    let target = Point3::new(0.0, 0.0, 0.0);
+    let yaw = self.frames as f32 / 1000.0;
+    let pos = Point3::new(yaw.cos() * 100.0 + 100.0, 50.0, yaw.sin() * 100.0 + 100.0);
+    let target = Point3::new(100.0, 0.0, 100.0);
     self.view = Matrix4::look_at_rh(&pos, &target, &Vector3::y());
 
     self.frames += 1;
@@ -371,4 +365,45 @@ impl GpuState {
 
     self.staging_belt.recall();
   }
+}
+
+fn build_terrain() -> Vec<Vertex> {
+  const WIDTH: usize = 200;
+  const HEIGHT: usize = 200;
+
+  let mut points = vec![Point3::new(0.0, 0.0, 0.0); WIDTH * HEIGHT];
+  let mut rng = rand::rngs::SmallRng::from_seed([0; 32]);
+
+  // Generation
+  for x in 0..WIDTH {
+    for z in 0..HEIGHT {
+      points[x * WIDTH + z] = Point3::new(
+        x as f32 + rng.random::<f32>() * 0.1,
+        rng.random::<f32>() * 2.0,
+        z as f32 + rng.random::<f32>() * 0.1,
+      );
+    }
+  }
+
+  let mut out = vec![];
+
+  // Tesselation.
+  for x in 0..WIDTH - 1 {
+    for y in 0..HEIGHT - 1 {
+      let a = points[x * WIDTH + y];
+      let b = points[x * WIDTH + (y + 1)];
+      let c = points[(x + 1) * WIDTH + (y + 1)];
+      let d = points[(x + 1) * WIDTH + y];
+
+      out.push(Vertex { pos: [a.x, a.y, a.z], things: [1.0, 0.0, 0.0, 1.0] });
+      out.push(Vertex { pos: [b.x, b.y, b.z], things: [0.0, 1.0, 0.0, 1.0] });
+      out.push(Vertex { pos: [c.x, c.y, c.z], things: [0.0, 0.0, 1.0, 1.0] });
+
+      out.push(Vertex { pos: [a.x, a.y, a.z], things: [1.0, 0.0, 0.0, 1.0] });
+      out.push(Vertex { pos: [c.x, c.y, c.z], things: [0.0, 1.0, 0.0, 1.0] });
+      out.push(Vertex { pos: [d.x, d.y, d.z], things: [0.0, 0.0, 1.0, 1.0] });
+    }
+  }
+
+  out
 }
