@@ -207,7 +207,7 @@ async fn setup_instance(canvas: &wgpu::web_sys::HtmlCanvasElement) -> GpuState {
     usage:    wgpu::BufferUsages::VERTEX,
   });
 
-  GpuState {
+  let mut state = GpuState {
     surface,
     device,
     queue,
@@ -224,10 +224,27 @@ async fn setup_instance(canvas: &wgpu::web_sys::HtmlCanvasElement) -> GpuState {
 
     buffer,
     buffer_len: 6,
-  }
+  };
+  state.configure_surface();
+  state
 }
 
 impl GpuState {
+  fn configure_surface(&mut self) {
+    let surface_config = wgpu::SurfaceConfiguration {
+      usage:                         wgpu::TextureUsages::RENDER_ATTACHMENT,
+      format:                        self.swapchain_format,
+      // Request compatibility with the sRGB-format texture view we're going to create later.
+      view_formats:                  vec![self.swapchain_format.add_srgb_suffix()],
+      alpha_mode:                    wgpu::CompositeAlphaMode::Auto,
+      width:                         1920,
+      height:                        1080,
+      desired_maximum_frame_latency: 2,
+      present_mode:                  wgpu::PresentMode::AutoVsync,
+    };
+    self.surface.configure(&self.device, &surface_config);
+  }
+
   fn draw(&self) {
     let surface_texture = self.surface.get_current_texture().unwrap();
     let texture_view = surface_texture.texture.create_view(&wgpu::TextureViewDescriptor {
