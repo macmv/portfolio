@@ -1,3 +1,5 @@
+use std::{cell::RefCell, rc::Rc};
+
 use bytemuck::{Pod, Zeroable};
 use nalgebra::Matrix4;
 use wasm_bindgen::prelude::*;
@@ -23,8 +25,47 @@ pub async fn setup_render(canvas: &wgpu::web_sys::HtmlCanvasElement) {
   let _ = console_log::init_with_level(log::Level::Trace);
 
   let state = setup_instance(canvas).await;
+  animate(
+    move || {
+      state.draw();
+    },
+    120,
+  );
+}
 
-  alert(&format!("Hello, world!"));
+fn animate(mut draw_frame: impl FnMut() + 'static, max_fps: i32) {
+  let animate_cb = Rc::new(RefCell::new(None));
+
+  let timeout_cb = Rc::new(RefCell::new(None));
+
+  {
+    let w = web_sys::window().unwrap();
+    let animate_cb = animate_cb.clone();
+    *timeout_cb.borrow_mut() = Some(Closure::wrap(Box::new(move || {
+      request_frame(&w, animate_cb.borrow().as_ref().unwrap());
+    }) as Box<dyn FnMut()>));
+  }
+
+  {
+    let w = web_sys::window().unwrap();
+    *animate_cb.borrow_mut() = Some(Closure::wrap(Box::new(move || {
+      draw_frame();
+
+      set_timeout(&w, timeout_cb.borrow().as_ref().unwrap(), 1000 / max_fps);
+    }) as Box<dyn FnMut()>));
+  }
+
+  let w = web_sys::window().unwrap();
+  request_frame(&w, animate_cb.borrow().as_ref().unwrap());
+}
+
+fn request_frame(w: &web_sys::Window, f: &Closure<dyn FnMut()>) {
+  w.request_animation_frame(f.as_ref().unchecked_ref()).unwrap();
+}
+
+fn set_timeout(w: &web_sys::Window, f: &Closure<dyn FnMut()>, timeout_ms: i32) -> i32 {
+  w.set_timeout_with_callback_and_timeout_and_arguments_0(f.as_ref().unchecked_ref(), timeout_ms)
+    .unwrap()
 }
 
 struct GpuState {
@@ -149,7 +190,7 @@ async fn setup_instance(canvas: &wgpu::web_sys::HtmlCanvasElement) -> GpuState {
     cache:         None,
   });
 
-  let mut state = GpuState {
+  GpuState {
     surface,
     device,
     queue,
@@ -163,6 +204,9 @@ async fn setup_instance(canvas: &wgpu::web_sys::HtmlCanvasElement) -> GpuState {
 
     view: Matrix4::identity(),
     perspective: Matrix4::new_perspective(1920.0 / 1080.0, 70.0, 0.1, 10000.0),
-  };
-  state
+  }
+}
+
+impl GpuState {
+  fn draw(&self) {}
 }
