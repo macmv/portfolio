@@ -109,6 +109,8 @@ struct GpuState {
 
   buffer:     wgpu::Buffer,
   buffer_len: u32,
+
+  frames: u32,
 }
 
 async fn setup_instance(canvas: &wgpu::web_sys::HtmlCanvasElement) -> GpuState {
@@ -250,6 +252,8 @@ async fn setup_instance(canvas: &wgpu::web_sys::HtmlCanvasElement) -> GpuState {
 
     buffer,
     buffer_len: 6,
+
+    frames: 0,
   };
   state.configure_surface();
   state
@@ -303,11 +307,12 @@ impl GpuState {
     let mut encoder =
       self.device.create_command_encoder(&wgpu::CommandEncoderDescriptor::default());
 
-    let yaw = 0.0_f32;
-    let pitch = 0.0_f32;
-    let pos = Point3::new(0.0, 0.0, -2.0);
-    let target = pos + Vector3::new(yaw.sin() * pitch.cos(), pitch.sin(), yaw.cos() * pitch.cos());
-    self.view = Matrix4::look_at_rh(&pos, &target, &-Vector3::y());
+    let yaw = self.frames as f32 / 100.0;
+    let pos = Point3::new(yaw.cos() * 3.0, 2.0, yaw.sin() * 3.0);
+    let target = Point3::new(0.0, 0.0, 0.0);
+    self.view = Matrix4::look_at_rh(&pos, &target, &Vector3::y());
+
+    self.frames += 1;
 
     let mat = self.perspective * self.view;
     let slice = bytemuck::cast_slice(mat.as_slice());
