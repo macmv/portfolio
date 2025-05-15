@@ -16,15 +16,14 @@ export const Banner = (props: { title: () => string }) => {
   );
 };
 
-const setupCanvas = (canvas: RefObject<HTMLCanvasElement>) => {
-  init().then(() => {
-    if (canvas.current) {
-      setup_render(canvas.current).then(() => {
-        const rect = canvas.current!.parentElement!.getBoundingClientRect();
-        resize(rect.width, rect.height);
-      });
-    } else {
-      setupCanvas(canvas);
-    }
-  });
+const setupCanvas = async (canvas: RefObject<HTMLCanvasElement>) => {
+  await init();
+
+  if (canvas.current) {
+    await setup_render(canvas.current);
+    const rect = canvas.current!.parentElement!.getBoundingClientRect();
+    resize(rect.width, rect.height);
+  } else {
+    await setupCanvas(canvas);
+  }
 };
