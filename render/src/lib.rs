@@ -3,7 +3,7 @@
 use std::{cell::RefCell, rc::Rc};
 
 use bytemuck::{Pod, Zeroable};
-use nalgebra::Matrix4;
+use nalgebra::{Matrix4, Vector2, vector};
 use wasm_bindgen::prelude::*;
 use wgpu::util::DeviceExt;
 
@@ -26,25 +26,35 @@ static mut STATE: Option<GpuState> = None;
 #[wasm_bindgen]
 pub async fn setup_render(canvas: &wgpu::web_sys::HtmlCanvasElement) {
   std::panic::set_hook(Box::new(console_error_panic_hook::hook));
-  let _ = console_log::init_with_level(log::Level::Trace);
+  let _ = console_log::init_with_level(log::Level::Info);
 
-  if unsafe { STATE.is_some() } {
-    alert("Render already initialized");
-    return;
-  }
+  let needs_animate = unsafe { STATE.is_none() };
 
   unsafe {
+    // Replace the state if its already set.
     STATE = Some(setup_instance(canvas).await);
   };
 
-  animate(
-    move || unsafe {
-      if let Some(state) = &mut STATE {
-        state.draw();
-      }
-    },
-    120,
-  );
+  if needs_animate {
+    animate(
+      move || unsafe {
+        if let Some(state) = &mut STATE {
+          state.draw();
+        }
+      },
+      120,
+    );
+  }
+}
+
+#[wasm_bindgen]
+pub fn resize(width: u32, height: u32) {
+  if let Some(state) = unsafe { STATE.as_mut() } {
+    log::info!("RESIZING TO {}x{}", width, height);
+
+    state.size = vector![width, height];
+    state.configure_surface();
+  }
 }
 
 fn animate(mut draw_frame: impl FnMut() + 'static, max_fps: i32) {
@@ -95,6 +105,7 @@ struct GpuState {
   staging_belt: wgpu::util::StagingBelt,
   uniform_buf:  wgpu::Buffer,
 
+  size:        Vector2<u32>,
   view:        Matrix4<f32>,
   perspective: Matrix4<f32>,
 
@@ -235,6 +246,7 @@ async fn setup_instance(canvas: &wgpu::web_sys::HtmlCanvasElement) -> GpuState {
     staging_belt: wgpu::util::StagingBelt::new(64),
     uniform_buf,
 
+    size: vector![1000, 500],
     view: Matrix4::identity(),
     perspective: Matrix4::new_perspective(1920.0 / 1080.0, 70.0, 0.1, 10000.0),
 
@@ -253,18 +265,20 @@ impl GpuState {
       // Request compatibility with the sRGB-format texture view we're going to create later.
       view_formats:                  vec![self.swapchain_format.add_srgb_suffix()],
       alpha_mode:                    wgpu::CompositeAlphaMode::Auto,
-      width:                         1000,
-      height:                        500,
+      width:                         self.size.x,
+      height:                        self.size.y,
       desired_maximum_frame_latency: 2,
       present_mode:                  wgpu::PresentMode::AutoVsync,
     };
     self.surface.configure(&self.device, &surface_config);
+    self.perspective =
+      Matrix4::new_perspective(self.size.x as f32 / self.size.y as f32, 70.0, 0.1, 10000.0);
 
     self.depth_texture = Some(self.device.create_texture(&wgpu::TextureDescriptor {
       label:           Some("depth_texture"),
       size:            wgpu::Extent3d {
-        width:                 1000,
-        height:                500,
+        width:                 self.size.x,
+        height:                self.size.y,
         depth_or_array_layers: 1,
       },
       mip_level_count: 1,
