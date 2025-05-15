@@ -308,5 +308,6 @@ impl GpuState {
     }
 
     self.queue.submit([encoder.finish()]);
+    surface_texture.present();
   }
 }
