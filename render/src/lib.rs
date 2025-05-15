@@ -18,7 +18,8 @@ extern "C" {
 #[derive(Clone, Copy, Zeroable, Pod)]
 #[repr(C)]
 struct Vertex {
-  pos: [f32; 3],
+  pos:    [f32; 3],
+  things: [f32; 4],
 }
 
 static mut STATE: Option<GpuState> = None;
@@ -183,6 +184,12 @@ async fn setup_instance(canvas: &wgpu::web_sys::HtmlCanvasElement) -> GpuState {
         offset:          0,
         shader_location: 0,
       },
+      // things
+      wgpu::VertexAttribute {
+        format:          wgpu::VertexFormat::Float32x4,
+        offset:          4 * 3,
+        shader_location: 1,
+      },
     ],
   }];
 
@@ -220,12 +227,12 @@ async fn setup_instance(canvas: &wgpu::web_sys::HtmlCanvasElement) -> GpuState {
   });
 
   let contents = &[
-    Vertex { pos: [0.0, 0.0, 0.0] },
-    Vertex { pos: [0.0, 1.0, 0.0] },
-    Vertex { pos: [1.0, 0.0, 0.0] },
-    Vertex { pos: [0.0, 0.0, 0.0] },
-    Vertex { pos: [0.0, 1.0, 0.0] },
-    Vertex { pos: [1.0, 0.0, 0.0] },
+    Vertex { pos: [0.0, 0.0, 0.0], things: [1.0, 0.0, 0.0, 1.0] },
+    Vertex { pos: [0.0, 1.0, 0.0], things: [0.0, 1.0, 0.0, 1.0] },
+    Vertex { pos: [1.0, 1.0, 0.0], things: [0.0, 0.0, 1.0, 1.0] },
+    Vertex { pos: [0.0, 0.0, 0.0], things: [1.0, 0.0, 0.0, 1.0] },
+    Vertex { pos: [1.0, 0.0, 0.0], things: [0.0, 1.0, 0.0, 1.0] },
+    Vertex { pos: [1.0, 1.0, 0.0], things: [0.0, 0.0, 1.0, 1.0] },
   ];
   let buffer = device.create_buffer_init(&wgpu::util::BufferInitDescriptor {
     label:    None,
