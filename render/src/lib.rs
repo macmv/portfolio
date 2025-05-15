@@ -308,8 +308,8 @@ impl GpuState {
     let mut encoder =
       self.device.create_command_encoder(&wgpu::CommandEncoderDescriptor::default());
 
-    let yaw = self.frames as f32 / 1000.0;
-    let pos = Point3::new(yaw.cos() * 100.0 + 100.0, 50.0, yaw.sin() * 100.0 + 100.0);
+    let yaw = self.frames as f32 / 2000.0;
+    let pos = Point3::new(yaw.cos() * 40.0 + 100.0, 20.0, yaw.sin() * 40.0 + 100.0);
     let target = Point3::new(100.0, 0.0, 100.0);
     self.view = Matrix4::look_at_rh(&pos, &target, &Vector3::y());
 
