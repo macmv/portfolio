@@ -8,6 +8,11 @@ export const Banner = (props: { title: () => string }) => {
 
   setupCanvas(canvas);
 
+  window.onresize = () => {
+    const rect = canvas.current!.parentElement!.getBoundingClientRect();
+    resize(rect.width, rect.height);
+  };
+
   return (
     <div class="banner">
       <canvas ref={canvas} style="position: fixed; z-index: -1" />
