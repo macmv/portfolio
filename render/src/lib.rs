@@ -5,7 +5,7 @@ use std::{cell::RefCell, rc::Rc};
 use bytemuck::{Pod, Zeroable};
 use nalgebra::{Matrix4, Point3, Vector2, Vector3, vector};
 use wasm_bindgen::prelude::*;
-use wgpu::{StencilFaceState, util::DeviceExt};
+use wgpu::util::DeviceExt;
 
 #[wasm_bindgen]
 extern "C" {
