@@ -82,6 +82,9 @@ struct GpuState {
 
   view:        Matrix4<f32>,
   perspective: Matrix4<f32>,
+
+  buffer:     wgpu::Buffer,
+  buffer_len: u32,
 }
 
 async fn setup_instance(canvas: &wgpu::web_sys::HtmlCanvasElement) -> GpuState {
@@ -190,6 +193,20 @@ async fn setup_instance(canvas: &wgpu::web_sys::HtmlCanvasElement) -> GpuState {
     cache:         None,
   });
 
+  let contents = &[
+    Vertex { pos: [0.0, 0.0, 0.0] },
+    Vertex { pos: [0.0, 1.0, 0.0] },
+    Vertex { pos: [1.0, 0.0, 0.0] },
+    Vertex { pos: [0.0, 0.0, 0.0] },
+    Vertex { pos: [0.0, 1.0, 0.0] },
+    Vertex { pos: [1.0, 0.0, 0.0] },
+  ];
+  let buffer = device.create_buffer_init(&wgpu::util::BufferInitDescriptor {
+    label:    None,
+    contents: bytemuck::cast_slice(contents),
+    usage:    wgpu::BufferUsages::VERTEX,
+  });
+
   GpuState {
     surface,
     device,
@@ -204,9 +221,62 @@ async fn setup_instance(canvas: &wgpu::web_sys::HtmlCanvasElement) -> GpuState {
 
     view: Matrix4::identity(),
     perspective: Matrix4::new_perspective(1920.0 / 1080.0, 70.0, 0.1, 10000.0),
+
+    buffer,
+    buffer_len: 6,
   }
 }
 
 impl GpuState {
-  fn draw(&self) {}
+  fn draw(&self) {
+    let surface_texture = self.surface.get_current_texture().unwrap();
+    let texture_view = surface_texture.texture.create_view(&wgpu::TextureViewDescriptor {
+      // Without add_srgb_suffix() the image we will be working with
+      // might not be "gamma correct".
+      format: Some(self.swapchain_format.add_srgb_suffix()),
+      ..Default::default()
+    });
+
+    /*
+    let depth_view =
+      self.depth_texture.as_mut().unwrap().create_view(&wgpu::TextureViewDescriptor::default());
+    */
+
+    let mut encoder =
+      self.device.create_command_encoder(&wgpu::CommandEncoderDescriptor::default());
+
+    {
+      let mut render_pass = encoder.begin_render_pass(&wgpu::RenderPassDescriptor {
+        label:                    None,
+        color_attachments:        &[Some(wgpu::RenderPassColorAttachment {
+          view:           &texture_view,
+          resolve_target: None,
+          ops:            wgpu::Operations {
+            load:  wgpu::LoadOp::Clear(wgpu::Color { r: 0.05, g: 0.05, b: 0.05, a: 1.0 }),
+            store: wgpu::StoreOp::Store,
+          },
+        })],
+        // TODO
+        depth_stencil_attachment: None,
+        // depth_stencil_attachment: Some(wgpu::RenderPassDepthStencilAttachment {
+        //   view:        &depth_view,
+        //   depth_ops:   Some(wgpu::Operations {
+        //     load:  wgpu::LoadOp::Clear(1.0),
+        //     store: wgpu::StoreOp::Discard,
+        //   }),
+        //   stencil_ops: None,
+        // }),
+        timestamp_writes:         None,
+        occlusion_query_set:      None,
+      });
+
+      render_pass.set_pipeline(&self.render_pipeline);
+      render_pass.set_bind_group(0, &self.bind_group, &[]);
+
+      render_pass.set_vertex_buffer(0, self.buffer.slice(..));
+      render_pass.draw(0..self.buffer_len, 0..1);
+    }
+
+    self.queue.submit([encoder.finish()]);
+  }
 }
