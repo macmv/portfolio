@@ -50,8 +50,6 @@ pub async fn setup_render(canvas: &wgpu::web_sys::HtmlCanvasElement) {
 #[wasm_bindgen]
 pub fn resize(width: u32, height: u32) {
   if let Some(state) = unsafe { STATE.as_mut() } {
-    log::info!("RESIZING TO {}x{}", width, height);
-
     state.size = vector![width, height];
     state.configure_surface();
   }
