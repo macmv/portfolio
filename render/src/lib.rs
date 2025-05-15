@@ -3,9 +3,9 @@
 use std::{cell::RefCell, rc::Rc};
 
 use bytemuck::{Pod, Zeroable};
-use nalgebra::{Matrix4, Vector2, vector};
+use nalgebra::{Matrix4, Point3, Vector2, Vector3, vector};
 use wasm_bindgen::prelude::*;
-use wgpu::util::DeviceExt;
+use wgpu::{StencilFaceState, util::DeviceExt};
 
 #[wasm_bindgen]
 extern "C" {
@@ -303,6 +303,25 @@ impl GpuState {
     let mut encoder =
       self.device.create_command_encoder(&wgpu::CommandEncoderDescriptor::default());
 
+    let yaw = 0.0_f32;
+    let pitch = 0.0_f32;
+    let pos = Point3::new(0.0, 0.0, -2.0);
+    let target = pos + Vector3::new(yaw.sin() * pitch.cos(), pitch.sin(), yaw.cos() * pitch.cos());
+    self.view = Matrix4::look_at_rh(&pos, &target, &-Vector3::y());
+
+    let mat = self.perspective * self.view;
+    let slice = bytemuck::cast_slice(mat.as_slice());
+    self
+      .staging_belt
+      .write_buffer(
+        &mut encoder,
+        &self.uniform_buf,
+        0,
+        wgpu::BufferSize::new(slice.len() as _).unwrap(),
+        &self.device,
+      )
+      .copy_from_slice(slice);
+
     {
       let mut render_pass = encoder.begin_render_pass(&wgpu::RenderPassDescriptor {
         label:                    None,
@@ -333,7 +352,11 @@ impl GpuState {
       render_pass.draw(0..self.buffer_len, 0..1);
     }
 
+    self.staging_belt.finish();
+
     self.queue.submit([encoder.finish()]);
     surface_texture.present();
+
+    self.staging_belt.recall();
   }
 }
