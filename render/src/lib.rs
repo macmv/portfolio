@@ -24,7 +24,7 @@ pub async fn setup_render(canvas: &wgpu::web_sys::HtmlCanvasElement) {
   std::panic::set_hook(Box::new(console_error_panic_hook::hook));
   let _ = console_log::init_with_level(log::Level::Trace);
 
-  let state = setup_instance(canvas).await;
+  let mut state = setup_instance(canvas).await;
   animate(
     move || {
       state.draw();
@@ -76,6 +76,7 @@ struct GpuState {
   swapchain_format: wgpu::TextureFormat,
 
   render_pipeline: wgpu::RenderPipeline,
+  depth_texture:   Option<wgpu::Texture>,
 
   staging_belt: wgpu::util::StagingBelt,
   uniform_buf:  wgpu::Buffer,
@@ -215,6 +216,7 @@ async fn setup_instance(canvas: &wgpu::web_sys::HtmlCanvasElement) -> GpuState {
     swapchain_format,
 
     render_pipeline,
+    depth_texture: None,
 
     staging_belt: wgpu::util::StagingBelt::new(64),
     uniform_buf,
@@ -237,15 +239,30 @@ impl GpuState {
       // Request compatibility with the sRGB-format texture view we're going to create later.
       view_formats:                  vec![self.swapchain_format.add_srgb_suffix()],
       alpha_mode:                    wgpu::CompositeAlphaMode::Auto,
-      width:                         1920,
-      height:                        1080,
+      width:                         1000,
+      height:                        500,
       desired_maximum_frame_latency: 2,
       present_mode:                  wgpu::PresentMode::AutoVsync,
     };
     self.surface.configure(&self.device, &surface_config);
+
+    self.depth_texture = Some(self.device.create_texture(&wgpu::TextureDescriptor {
+      label:           Some("depth_texture"),
+      size:            wgpu::Extent3d {
+        width:                 1000,
+        height:                500,
+        depth_or_array_layers: 1,
+      },
+      mip_level_count: 1,
+      sample_count:    1,
+      dimension:       wgpu::TextureDimension::D2,
+      format:          wgpu::TextureFormat::Depth32Float,
+      usage:           wgpu::TextureUsages::RENDER_ATTACHMENT,
+      view_formats:    &[],
+    }));
   }
 
-  fn draw(&self) {
+  fn draw(&mut self) {
     let surface_texture = self.surface.get_current_texture().unwrap();
     let texture_view = surface_texture.texture.create_view(&wgpu::TextureViewDescriptor {
       // Without add_srgb_suffix() the image we will be working with
@@ -254,10 +271,8 @@ impl GpuState {
       ..Default::default()
     });
 
-    /*
     let depth_view =
       self.depth_texture.as_mut().unwrap().create_view(&wgpu::TextureViewDescriptor::default());
-    */
 
     let mut encoder =
       self.device.create_command_encoder(&wgpu::CommandEncoderDescriptor::default());
@@ -273,16 +288,14 @@ impl GpuState {
             store: wgpu::StoreOp::Store,
           },
         })],
-        // TODO
-        depth_stencil_attachment: None,
-        // depth_stencil_attachment: Some(wgpu::RenderPassDepthStencilAttachment {
-        //   view:        &depth_view,
-        //   depth_ops:   Some(wgpu::Operations {
-        //     load:  wgpu::LoadOp::Clear(1.0),
-        //     store: wgpu::StoreOp::Discard,
-        //   }),
-        //   stencil_ops: None,
-        // }),
+        depth_stencil_attachment: Some(wgpu::RenderPassDepthStencilAttachment {
+          view:        &depth_view,
+          depth_ops:   Some(wgpu::Operations {
+            load:  wgpu::LoadOp::Clear(1.0),
+            store: wgpu::StoreOp::Discard,
+          }),
+          stencil_ops: None,
+        }),
         timestamp_writes:         None,
         occlusion_query_set:      None,
       });
