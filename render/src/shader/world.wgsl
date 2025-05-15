@@ -15,8 +15,8 @@ fn fs_main(
   vert: VSOut,
 ) -> @location(0) vec4<f32> {
   if vert.things.x < 0.1 || vert.things.y < 0.1 || vert.things.z < 0.1 {
-    return vec4<f32>(1.0, 0.0, 0.0, 1.0);
+    return vec4<f32>(0.2, 0.2, 0.2, 1.0);
   }
 
-  return vec4<f32>(0.0, 1.0, 0.0, 1.0);
+  return vec4<f32>(0.4, 0.4, 0.4, 1.0);
 }
