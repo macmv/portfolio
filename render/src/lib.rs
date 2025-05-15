@@ -1,3 +1,5 @@
+#![allow(static_mut_refs)]
+
 use std::{cell::RefCell, rc::Rc};
 
 use bytemuck::{Pod, Zeroable};
@@ -19,15 +21,27 @@ struct Vertex {
   pos: [f32; 3],
 }
 
+static mut STATE: Option<GpuState> = None;
+
 #[wasm_bindgen]
 pub async fn setup_render(canvas: &wgpu::web_sys::HtmlCanvasElement) {
   std::panic::set_hook(Box::new(console_error_panic_hook::hook));
   let _ = console_log::init_with_level(log::Level::Trace);
 
-  let mut state = setup_instance(canvas).await;
+  if unsafe { STATE.is_some() } {
+    alert("Render already initialized");
+    return;
+  }
+
+  unsafe {
+    STATE = Some(setup_instance(canvas).await);
+  };
+
   animate(
-    move || {
-      state.draw();
+    move || unsafe {
+      if let Some(state) = &mut STATE {
+        state.draw();
+      }
     },
     120,
   );
