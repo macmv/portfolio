@@ -103,7 +103,8 @@ struct GpuState {
   depth_texture:   Option<wgpu::Texture>,
 
   staging_belt: wgpu::util::StagingBelt,
-  uniform_buf:  wgpu::Buffer,
+  mat_buf:      wgpu::Buffer,
+  time_buf:     wgpu::Buffer,
 
   size:        Vector2<u32>,
   view:        Matrix4<f32>,
@@ -147,28 +148,50 @@ async fn setup_instance(canvas: &wgpu::web_sys::HtmlCanvasElement) -> GpuState {
 
   let bind_group_layout = device.create_bind_group_layout(&wgpu::BindGroupLayoutDescriptor {
     label:   None,
-    entries: &[wgpu::BindGroupLayoutEntry {
-      binding:    0,
-      visibility: wgpu::ShaderStages::VERTEX,
-      ty:         wgpu::BindingType::Buffer {
-        ty:                 wgpu::BufferBindingType::Uniform,
-        has_dynamic_offset: false,
-        min_binding_size:   wgpu::BufferSize::new(64),
+    entries: &[
+      wgpu::BindGroupLayoutEntry {
+        binding:    0,
+        visibility: wgpu::ShaderStages::VERTEX,
+        ty:         wgpu::BindingType::Buffer {
+          ty:                 wgpu::BufferBindingType::Uniform,
+          has_dynamic_offset: false,
+          min_binding_size:   wgpu::BufferSize::new(64),
+        },
+        count:      None,
       },
-      count:      None,
-    }],
+      wgpu::BindGroupLayoutEntry {
+        binding:    1,
+        visibility: wgpu::ShaderStages::VERTEX,
+        ty:         wgpu::BindingType::Buffer {
+          ty:                 wgpu::BufferBindingType::Uniform,
+          has_dynamic_offset: false,
+          min_binding_size:   wgpu::BufferSize::new(64),
+        },
+        count:      None,
+      },
+    ],
   });
 
   let buffer = Matrix4::<f32>::identity();
-  let uniform_buf = device.create_buffer_init(&wgpu::util::BufferInitDescriptor {
+  let mat_buf = device.create_buffer_init(&wgpu::util::BufferInitDescriptor {
     label:    None,
     contents: bytemuck::cast_slice(buffer.as_slice()),
+    usage:    wgpu::BufferUsages::UNIFORM | wgpu::BufferUsages::COPY_DST,
+  });
+  let mut bytes = [0; 64];
+  bytes[0..4].copy_from_slice(&0.0_f32.to_ne_bytes());
+  let time_buf = device.create_buffer_init(&wgpu::util::BufferInitDescriptor {
+    label:    None,
+    contents: &bytes,
     usage:    wgpu::BufferUsages::UNIFORM | wgpu::BufferUsages::COPY_DST,
   });
 
   let bind_group = device.create_bind_group(&wgpu::BindGroupDescriptor {
     layout:  &bind_group_layout,
-    entries: &[wgpu::BindGroupEntry { binding: 0, resource: uniform_buf.as_entire_binding() }],
+    entries: &[
+      wgpu::BindGroupEntry { binding: 0, resource: mat_buf.as_entire_binding() },
+      wgpu::BindGroupEntry { binding: 1, resource: time_buf.as_entire_binding() },
+    ],
     label:   None,
   });
 
@@ -245,7 +268,8 @@ async fn setup_instance(canvas: &wgpu::web_sys::HtmlCanvasElement) -> GpuState {
     depth_texture: None,
 
     staging_belt: wgpu::util::StagingBelt::new(64),
-    uniform_buf,
+    mat_buf,
+    time_buf,
 
     size: vector![1000, 500],
     view: Matrix4::identity(),
@@ -308,7 +332,9 @@ impl GpuState {
     let mut encoder =
       self.device.create_command_encoder(&wgpu::CommandEncoderDescriptor::default());
 
-    let yaw = self.frames as f32 / 2000.0;
+    let time = self.frames as f32 / 100.0;
+
+    let yaw = time / 20.0;
     let pos = Point3::new(yaw.cos() * 40.0 + 100.0, 20.0, yaw.sin() * 40.0 + 100.0);
     let target = Point3::new(100.0, 0.0, 100.0);
     self.view = Matrix4::look_at_rh(&pos, &target, &Vector3::y());
@@ -316,17 +342,30 @@ impl GpuState {
     self.frames += 1;
 
     let mat = self.perspective * self.view;
-    let slice = bytemuck::cast_slice(mat.as_slice());
+
+    let bytes = bytemuck::cast_slice(mat.as_slice());
     self
       .staging_belt
       .write_buffer(
         &mut encoder,
-        &self.uniform_buf,
+        &self.mat_buf,
         0,
-        wgpu::BufferSize::new(slice.len() as _).unwrap(),
+        wgpu::BufferSize::new(bytes.len() as _).unwrap(),
         &self.device,
       )
-      .copy_from_slice(slice);
+      .copy_from_slice(&bytes);
+    let mut bytes = [0; 64];
+    bytes[0..4].copy_from_slice(&time.to_ne_bytes());
+    self
+      .staging_belt
+      .write_buffer(
+        &mut encoder,
+        &self.time_buf,
+        0,
+        wgpu::BufferSize::new(bytes.len() as _).unwrap(),
+        &self.device,
+      )
+      .copy_from_slice(&bytes);
 
     {
       let mut render_pass = encoder.begin_render_pass(&wgpu::RenderPassDescriptor {
