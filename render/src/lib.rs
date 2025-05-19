@@ -136,7 +136,11 @@ async fn setup_instance(canvas: &wgpu::web_sys::HtmlCanvasElement) -> GpuState {
 
   let (device, queue) = adapter
     .request_device(&wgpu::DeviceDescriptor {
-      required_limits: wgpu::Limits::downlevel_webgl2_defaults(),
+      required_limits: wgpu::Limits {
+        max_texture_dimension_1d: 8192,
+        max_texture_dimension_2d: 8192,
+        ..wgpu::Limits::downlevel_webgl2_defaults()
+      },
       ..Default::default()
     })
     .await
