@@ -4,6 +4,7 @@ use std::{cell::RefCell, rc::Rc};
 
 use bytemuck::{Pod, Zeroable};
 use nalgebra::{Matrix4, Point3, Vector2, Vector3, vector};
+use noise::{BasicMulti, NoiseFn, OpenSimplex};
 use rand::{Rng, SeedableRng};
 use wasm_bindgen::prelude::*;
 use wgpu::util::DeviceExt;
@@ -414,15 +415,7 @@ fn build_terrain() -> Vec<Vertex> {
   let mut rng = rand::rngs::SmallRng::from_seed([0; 32]);
 
   // Generation
-  for x in 0..WIDTH {
-    for z in 0..HEIGHT {
-      points[x * WIDTH + z] = Point3::new(
-        x as f32 + rng.random::<f32>() * 0.1,
-        rng.random::<f32>() * 2.0,
-        z as f32 + rng.random::<f32>() * 0.1,
-      );
-    }
-  }
+  generate_terrain(&mut rng, &mut points, WIDTH, HEIGHT);
 
   let mut out = vec![];
 
@@ -445,4 +438,25 @@ fn build_terrain() -> Vec<Vertex> {
   }
 
   out
+}
+
+fn generate_terrain(
+  rng: &mut impl Rng,
+  points: &mut Vec<Point3<f32>>,
+  width: usize,
+  height: usize,
+) {
+  let noise = BasicMulti::<OpenSimplex>::new(rng.next_u32());
+
+  for x in 0..width {
+    for z in 0..height {
+      let height = noise.get([x as f64 / 50.0, z as f64 / 50.0]) as f32;
+
+      points[x * width + z] = Point3::new(
+        x as f32 + rng.random::<f32>() * 0.1,
+        height * 50.0,
+        z as f32 + rng.random::<f32>() * 0.1,
+      );
+    }
+  }
 }
