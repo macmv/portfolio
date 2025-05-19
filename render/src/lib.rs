@@ -333,7 +333,7 @@ impl GpuState {
     let mut encoder =
       self.device.create_command_encoder(&wgpu::CommandEncoderDescriptor::default());
 
-    let time = self.frames as f32 / 100.0;
+    let time = self.frames as f32 / 500.0;
 
     let yaw = time / 20.0;
     let pos = Point3::new(yaw.cos() * 40.0 + 100.0, 20.0, yaw.sin() * 40.0 + 100.0);
