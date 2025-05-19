@@ -462,7 +462,7 @@ fn generate_terrain(
 
       points[x * width + z] = Point3::new(
         x as f32 + rng.random::<f32>() * 0.1,
-        height * 50.0,
+        (height * 50.0).max(0.0),
         z as f32 + rng.random::<f32>() * 0.1,
       );
     }
