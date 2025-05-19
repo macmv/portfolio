@@ -1,5 +1,8 @@
 @group(0) @binding(0) var<uniform> mat: mat4x4<f32>;
-@group(0) @binding(1) var<uniform> time_mat: mat4x4<f32>; // we're only using m00
+
+// m00: the time
+// m01: aspect ratio
+@group(0) @binding(1) var<uniform> info: mat4x4<f32>;
 
 struct VSOut {
   @builtin(position) pos: vec4<f32>,
@@ -11,13 +14,19 @@ fn vs_main(
   @location(0) pos: vec3<f32>,
   @location(1) things: vec4<f32>,
 ) -> VSOut {
-  let time = time_mat[0][0];
+  let time = info[0][0];
+  let aspect = info[0][1];
+
   let identity = pos.x * 100.0 + pos.z * 10.0;
 
   var moved = pos;
   moved.y += sin(time + identity) * 0.5;
 
-  return VSOut(mat * vec4<f32>(moved, 1.0), things);
+  var screen_space = mat * vec4<f32>(moved, 1.0);
+  screen_space.x += things.x * 0.1;
+  screen_space.y += things.y * 0.1 * aspect;
+
+  return VSOut(screen_space, things);
 }
 
 @fragment

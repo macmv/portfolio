@@ -357,6 +357,7 @@ impl GpuState {
       .copy_from_slice(&bytes);
     let mut bytes = [0; 64];
     bytes[0..4].copy_from_slice(&time.to_ne_bytes());
+    bytes[4..8].copy_from_slice(&(self.size.x as f32 / self.size.y as f32).to_ne_bytes());
     self
       .staging_belt
       .write_buffer(
@@ -422,6 +423,7 @@ fn build_terrain() -> Vec<Vertex> {
   // Tesselation.
   for x in 0..WIDTH - 1 {
     for y in 0..HEIGHT - 1 {
+      /*
       let a = points[x * WIDTH + y];
       let b = points[x * WIDTH + (y + 1)];
       let c = points[(x + 1) * WIDTH + (y + 1)];
@@ -434,6 +436,12 @@ fn build_terrain() -> Vec<Vertex> {
       out.push(Vertex { pos: [a.x, a.y, a.z], things: [1.0, 0.0, 0.0, 1.0] });
       out.push(Vertex { pos: [c.x, c.y, c.z], things: [0.0, 1.0, 0.0, 1.0] });
       out.push(Vertex { pos: [d.x, d.y, d.z], things: [0.0, 0.0, 1.0, 1.0] });
+      */
+      let p = points[x * WIDTH + y];
+
+      out.push(Vertex { pos: [p.x, p.y, p.z], things: [1.0, 0.0, 0.0, 1.0] });
+      out.push(Vertex { pos: [p.x, p.y, p.z], things: [0.0, 1.0, 0.0, 1.0] });
+      out.push(Vertex { pos: [p.x, p.y, p.z], things: [1.0, 1.0, 0.0, 1.0] });
     }
   }
 
