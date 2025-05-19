@@ -4,9 +4,12 @@
 // m01: aspect ratio
 @group(0) @binding(1) var<uniform> info: mat4x4<f32>;
 
+const POINT_SIZE: f32 = 0.4;
+
 struct VSOut {
   @builtin(position) pos: vec4<f32>,
-  @location(0) things: vec4<f32>,
+  @location(0) logical_space: vec2<f32>,
+  @location(1) original: vec2<f32>,
 };
 
 @vertex
@@ -23,18 +26,23 @@ fn vs_main(
   moved.y += sin(time + identity) * 0.5;
 
   var screen_space = mat * vec4<f32>(moved, 1.0);
-  screen_space.x += things.x * 0.1;
-  screen_space.y += things.y * 0.1 * aspect;
+  var logical_space = screen_space.xy;
+  let original = logical_space;
+  screen_space.x += (things.x * 4.0 - 3.0) * POINT_SIZE / aspect;
+  screen_space.y += (things.y * 4.0 - 3.0) * POINT_SIZE;
+  logical_space.x += (things.x * 4.0 - 3.0) * POINT_SIZE;
+  logical_space.y += (things.y * 4.0 - 3.0) * POINT_SIZE;
 
-  return VSOut(screen_space, things);
+  return VSOut(screen_space, logical_space, original);
 }
 
 @fragment
 fn fs_main(
   vert: VSOut,
 ) -> @location(0) vec4<f32> {
-  if vert.things.x < 0.1 || vert.things.y < 0.1 || vert.things.z < 0.1 {
-    return vec4<f32>(0.2, 0.2, 0.2, 1.0);
+  let diff = vert.logical_space - vert.original;
+  if diff.x * diff.x + diff.y * diff.y > POINT_SIZE * POINT_SIZE {
+    discard;
   }
 
   return vec4<f32>(0.4, 0.4, 0.4, 1.0);
