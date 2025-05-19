@@ -9,8 +9,7 @@ export const Banner = (props: { title: () => string }) => {
   setupCanvas(canvas);
 
   window.onresize = () => {
-    const rect = canvas.current!.parentElement!.getBoundingClientRect();
-    resize(rect.width, rect.height);
+    performResize(canvas.current!);
   };
 
   return (
@@ -26,9 +25,16 @@ const setupCanvas = async (canvas: RefObject<HTMLCanvasElement>) => {
 
   if (canvas.current) {
     await setup_render(canvas.current);
-    const rect = canvas.current!.parentElement!.getBoundingClientRect();
-    resize(rect.width, rect.height);
+    performResize(canvas.current);
   } else {
     await setupCanvas(canvas);
   }
+};
+
+const performResize = (canvas: HTMLCanvasElement) => {
+  const rect = canvas.parentElement!.getBoundingClientRect();
+  resize(
+    rect.width * window.devicePixelRatio,
+    rect.height * window.devicePixelRatio,
+  );
 };

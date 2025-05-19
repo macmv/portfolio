@@ -7,6 +7,10 @@
   justify-content: center;
 }
 
+.banner > canvas {
+  height: 400px;
+}
+
 h1 {
   color: #333;
   font-size: 64px;
