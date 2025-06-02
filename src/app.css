@@ -4,9 +4,16 @@
 
 .content {
   margin: 20px;
+  display: flex;
 }
 
 .banner {
   height: 200px;
   background: #ddd;
+}
+
+.code-input {
+  resize: none;
+  font-family: monospace;
+  font-size: 20px;
 }

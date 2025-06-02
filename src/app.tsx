@@ -49,18 +49,39 @@ const Content = () => {
 };
 
 const Home = () => {
-  const [count, setCount] = useState(0);
+  const [code, setCode] = useState("1 + 2 * 3");
 
   return (
     <div class="content">
-      <div>
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/app.tsx</code> and save to test HMR
-        </p>
-        Current page is: {currentPage()}
+      <div
+        style={{
+          flex: "1",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <h2>Parsers</h2>
+        <input
+          type="text"
+          class="code-input"
+          data-gramm="false"
+          data-gramm_editor="false"
+          data-enable-grammarly="false"
+          data-lt-active="false"
+          value={code}
+          onChange={(e) => {
+            setCode((e.target as HTMLTextAreaElement).value);
+          }}
+        />
+      </div>
+      <div style={{ flex: "1" }}>
+        <img
+          src="https://picsum.photos/seed/picsum/200/300"
+          alt="Random from Picsum"
+          style={{ maxWidth: "100%", height: "auto" }}
+        />
       </div>
     </div>
   );
