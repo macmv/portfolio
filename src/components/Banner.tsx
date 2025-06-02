@@ -6,10 +6,10 @@ import { RefObject } from "preact";
 export const Banner = (props: { title: () => string }) => {
   const canvas = useRef<HTMLCanvasElement>(null);
 
-  setupCanvas(canvas);
+  // setupCanvas(canvas);
 
   window.onresize = () => {
-    performResize(canvas.current!);
+    // performResize(canvas.current!);
   };
 
   return (
