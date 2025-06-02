@@ -22,27 +22,47 @@ export const ParseTree = (props: { code: string }) => {
   } else if (typeof tree === "string") {
     return <div class="parse-error">{tree}</div>;
   } else {
-    const renderNode = (idx: number) => {
+    const renderNode = (
+      idx: number,
+    ): { element: any; x: number; width: number } => {
       const node = tree[idx];
 
       if (node.type === "binary") {
         const left = renderNode(node.left);
         const right = renderNode(node.right);
 
-        return (
-          <span class="binary">
-            <span class="child">{left}</span>
-            <span class="node">{node.operator}</span>
-            <span class="child">{right}</span>
-          </span>
-        );
+        const leftX = left.width - left.x;
+        const rightX = left.width + 40 + right.x;
+        const x = (leftX + rightX) / 2;
+        const offset = x - left.width - 20;
+
+        return {
+          x,
+          width: left.width + right.width + 40,
+          element: (
+            <span class="binary">
+              <span class="child">{left.element}</span>
+              <span
+                class="node"
+                style={{ marginLeft: offset, marginRight: -offset }}
+              >
+                {node.operator}
+              </span>
+              <span class="child">{right.element}</span>
+            </span>
+          ),
+        };
       } else if (node.type === "literal") {
-        return <span class="node">{node.value}</span>;
+        return {
+          element: <span class="node">{node.value}</span>,
+          x: 20,
+          width: 40,
+        };
       } else {
-        return <></>;
+        return { element: <></>, x: 0, width: 0 };
       }
     };
 
-    return <div class="parse-tree">{renderNode(tree.length - 1)}</div>;
+    return <div class="parse-tree">{renderNode(tree.length - 1).element}</div>;
   }
 };
