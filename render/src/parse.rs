@@ -1,4 +1,5 @@
-use wasm_bindgen::prelude::wasm_bindgen;
+use wasm_bindgen::{JsValue, prelude::wasm_bindgen};
+use web_sys::js_sys::{Object, Reflect};
 
 pub struct Tree {
   nodes: Vec<Node>,
@@ -35,11 +36,41 @@ impl BinaryOp {
 }
 
 #[wasm_bindgen]
-pub fn parse(text: &str) -> String {
+pub fn parse(text: &str) -> JsValue {
   let mut parser = Parser { text, pos: 0, out: Tree { nodes: vec![] } };
   match parser.expr() {
-    Ok(_) => format!("Parsed successfully with {} nodes", parser.out.nodes.len()),
-    Err(e) => e,
+    Ok(_) => parser
+      .out
+      .nodes
+      .iter()
+      .map(|node| {
+        let obj = Object::new();
+
+        let _ = Reflect::set(&obj, &"start".into(), &JsValue::from(node.start));
+        let _ = Reflect::set(&obj, &"end".into(), &JsValue::from(node.end));
+
+        match node.kind {
+          NodeKind::Bin { left, right, .. } => {
+            let _ = Reflect::set(&obj, &"type".into(), &"binary".into());
+            let _ = Reflect::set(&obj, &"left".into(), &left.into());
+            let _ = Reflect::set(&obj, &"right".into(), &right.into());
+          }
+          NodeKind::Literal => {
+            let _ = Reflect::set(&obj, &"type".into(), &"literal".into());
+            let _ = Reflect::set(
+              &obj,
+              &"value".into(),
+              &text[node.start as usize..node.end as usize].into(),
+            );
+          }
+        }
+
+        obj
+      })
+      .collect::<Vec<_>>()
+      .into(),
+
+    Err(e) => e.into(),
   }
 }
 
