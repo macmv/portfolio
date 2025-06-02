@@ -1,6 +1,8 @@
 import { useEffect, useState } from "preact/hooks";
 import init, { parse } from "../../render/pkg";
 
+import "./ParseTree.css";
+
 type Tree = Array<Node>;
 type Node =
   | { type: "binary"; left: number; right: number; operator: string }
@@ -18,7 +20,7 @@ export const ParseTree = (props: { code: string }) => {
   if (tree === null) {
     return <></>;
   } else if (typeof tree === "string") {
-    return <div class="parse-tree">{tree}</div>;
+    return <div class="parse-error">{tree}</div>;
   } else {
     const renderNode = (idx: number) => {
       const node = tree[idx];
@@ -29,16 +31,18 @@ export const ParseTree = (props: { code: string }) => {
 
         return (
           <span class="binary">
-            {left} {node.operator} {right}
+            <span class="child">{left}</span>
+            <span class="node">{node.operator}</span>
+            <span class="child">{right}</span>
           </span>
         );
       } else if (node.type === "literal") {
-        return <span class="binary">{node.value}</span>;
+        return <span class="node">{node.value}</span>;
       } else {
         return <></>;
       }
     };
 
-    return renderNode(tree.length - 1);
+    return <div class="parse-tree">{renderNode(tree.length - 1)}</div>;
   }
 };

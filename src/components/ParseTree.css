@@ -1,0 +1,22 @@
+.parse-tree .node {
+  margin: 5px;
+
+  display: inline-block;
+  width: 40px;
+  height: 40px;
+
+  padding: 7px;
+  text-align: center;
+
+  border: 1px solid #ccc;
+  border-radius: 20px;
+}
+
+.parse-tree .binary {
+  display: flex;
+  flex-direction: row;
+}
+
+.parse-tree .child {
+  margin-top: 60px;
+}
