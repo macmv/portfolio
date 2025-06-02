@@ -9,6 +9,8 @@ use rand::{Rng, SeedableRng};
 use wasm_bindgen::prelude::*;
 use wgpu::util::DeviceExt;
 
+mod parse;
+
 #[wasm_bindgen]
 extern "C" {
   fn alert(s: &str);
