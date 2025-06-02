@@ -19,6 +19,7 @@ enum NodeKind {
   Literal,
 }
 
+#[derive(Clone, Copy)]
 enum BinaryOp {
   Add,
   Subtract,
@@ -31,6 +32,15 @@ impl BinaryOp {
     match self {
       BinaryOp::Add | BinaryOp::Subtract => 1,
       BinaryOp::Multiply | BinaryOp::Divide => 2,
+    }
+  }
+
+  fn as_char(&self) -> char {
+    match self {
+      BinaryOp::Add => '+',
+      BinaryOp::Subtract => '-',
+      BinaryOp::Multiply => '*',
+      BinaryOp::Divide => '/',
     }
   }
 }
@@ -50,10 +60,11 @@ pub fn parse(text: &str) -> JsValue {
         let _ = Reflect::set(&obj, &"end".into(), &JsValue::from(node.end));
 
         match node.kind {
-          NodeKind::Bin { left, right, .. } => {
+          NodeKind::Bin { left, right, op } => {
             let _ = Reflect::set(&obj, &"type".into(), &"binary".into());
             let _ = Reflect::set(&obj, &"left".into(), &left.into());
             let _ = Reflect::set(&obj, &"right".into(), &right.into());
+            let _ = Reflect::set(&obj, &"operator".into(), &op.as_char().to_string().into());
           }
           NodeKind::Literal => {
             let _ = Reflect::set(&obj, &"type".into(), &"literal".into());
