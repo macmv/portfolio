@@ -4,6 +4,7 @@ import "./app.css";
 import { Link } from "./components/Link";
 import { currentPage, Router } from "./router";
 import { Banner } from "./components/Banner";
+import { ParseTree } from "./components/ParseTree";
 
 export function App() {
   return (
@@ -71,17 +72,16 @@ const Home = () => {
           data-enable-grammarly="false"
           data-lt-active="false"
           value={code}
+          onKeyUp={(e) => {
+            setCode((e.target as HTMLTextAreaElement).value);
+          }}
           onChange={(e) => {
             setCode((e.target as HTMLTextAreaElement).value);
           }}
         />
       </div>
       <div style={{ flex: "1" }}>
-        <img
-          src="https://picsum.photos/seed/picsum/200/300"
-          alt="Random from Picsum"
-          style={{ maxWidth: "100%", height: "auto" }}
-        />
+        <ParseTree code={code} />
       </div>
     </div>
   );
