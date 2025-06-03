@@ -5,16 +5,27 @@
   color: inherit;
 }
 
-.link-content  {
-  background:
-    linear-gradient(#00000000, #00000000),
-    linear-gradient(#000000ff, #000000ff);
-  background-size: 100% 0.1em, 0 0.1em;
-  background-position: 100% 100%, 0% 100%;
-  background-repeat: no-repeat;
-  transition: background-size 100ms;
+.link-content {
+  position: relative;
 }
 
-.link-wrapper:hover > .link-content {
-  background-size: 0 0.1em, 100% 0.1em;
+.link-content::after {
+  content: '';
+  position: absolute;
+  width: 0;
+  left: 0;
+  bottom: -2px;
+
+  border: 2px solid #000;
+  border-radius: 2px;
+  border-left: 0px solid #000;
+  border-right: 0px solid #000;
+
+  transition: border-width 100ms, width 100ms;
+}
+
+.link-wrapper:hover > .link-content::after {
+  border-left: 2px solid #000;
+  border-right: 2px solid #000;
+  width: 100%;
 }
