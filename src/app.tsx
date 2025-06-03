@@ -16,25 +16,11 @@ export function App() {
           <Link href="/skills">Skills</Link>
           <Link href="/contact">Contact</Link>
         </Header>
-        <Banner title={currentTitle} />
         <Content />
       </Router>
     </div>
   );
 }
-
-const currentTitle = () => {
-  switch (currentPage()) {
-    case "/about":
-      return "About";
-    case "/skills":
-      return "Skills";
-    case "/contact":
-      return "Contact";
-    default:
-      return "Neil Macneale";
-  }
-};
 
 const Content = () => {
   switch (currentPage()) {
@@ -54,56 +40,74 @@ const Home = () => {
   const [highlight, setHighlight] = useState<[number, number] | null>([0, 1]);
 
   return (
-    <div class="content">
-      <div
-        style={{
-          flex: "1",
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
-        <h2>Parsers</h2>
-        {highlight && (
-          <span
-            class="highlight"
-            dangerouslySetInnerHTML={{
-              __html:
-                "&nbsp;".repeat(highlight[0]) +
-                "_".repeat(highlight[1] - highlight[0]),
+    <>
+      <Banner title="Neil Macneale" />
+      <div class="content">
+        <div
+          style={{
+            flex: "1",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <h2>Parsers</h2>
+          {highlight && (
+            <span
+              class="highlight"
+              dangerouslySetInnerHTML={{
+                __html:
+                  "&nbsp;".repeat(highlight[0]) +
+                  "_".repeat(highlight[1] - highlight[0]),
+              }}
+            />
+          )}
+          <input
+            type="text"
+            class="code-input"
+            data-gramm="false"
+            data-gramm_editor="false"
+            data-enable-grammarly="false"
+            data-lt-active="false"
+            value={code}
+            onKeyUp={(e) => {
+              setCode((e.target as HTMLTextAreaElement).value);
+            }}
+            onChange={(e) => {
+              setCode((e.target as HTMLTextAreaElement).value);
             }}
           />
-        )}
-        <input
-          type="text"
-          class="code-input"
-          data-gramm="false"
-          data-gramm_editor="false"
-          data-enable-grammarly="false"
-          data-lt-active="false"
-          value={code}
-          onKeyUp={(e) => {
-            setCode((e.target as HTMLTextAreaElement).value);
-          }}
-          onChange={(e) => {
-            setCode((e.target as HTMLTextAreaElement).value);
-          }}
-        />
+        </div>
+        <div style={{ flex: "1" }}>
+          <ParseTree code={code} setHighlight={setHighlight} />
+        </div>
       </div>
-      <div style={{ flex: "1" }}>
-        <ParseTree code={code} setHighlight={setHighlight} />
-      </div>
-    </div>
+    </>
   );
 };
 
 const About = () => {
-  return <div>About Me</div>;
+  return (
+    <>
+      <Banner title="About" />
+      <div>About Me</div>
+    </>
+  );
 };
 const Skills = () => {
-  return <div>Many skills</div>;
+  return (
+    <>
+      <Banner title="Skills" />
+      <div>Many skills</div>
+    </>
+  );
 };
 const Contact = () => {
-  return <div>Contact me!</div>;
+  return (
+    <>
+      <Banner title="Skills" />
+      <div>Contact me!</div>
+    </>
+  );
 };
