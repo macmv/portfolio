@@ -3,10 +3,10 @@
   width: 40px;
   height: 40px;
 
-  padding: 7px;
+  padding: 5px;
   text-align: center;
 
-  border: 1px solid #ccc;
+  border: 2px solid #888;
   border-radius: 20px;
   background-color: #fff;
 }
@@ -23,7 +23,7 @@
 .parse-tree .line {
   position: absolute;
   width: 2px;
-  background-color: #000;
+  background-color: #888;
   z-index: -1;
 
   transform-origin: top;
