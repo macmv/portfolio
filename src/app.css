@@ -16,4 +16,16 @@
   resize: none;
   font-family: monospace;
   font-size: 20px;
+  width: 250px;
+}
+
+.highlight {
+  color: #0a3;
+  position: absolute;
+  margin-top: 64px;
+  font-family: monospace;
+  font-size: 20px;
+  width: 250px;
+  padding: 4px;
+  whitespace: nowrap;
 }

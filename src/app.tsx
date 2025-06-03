@@ -51,6 +51,7 @@ const Content = () => {
 
 const Home = () => {
   const [code, setCode] = useState("1 + 2 * 3");
+  const [highlight, setHighlight] = useState<[number, number] | null>([0, 1]);
 
   return (
     <div class="content">
@@ -64,6 +65,16 @@ const Home = () => {
         }}
       >
         <h2>Parsers</h2>
+        {highlight && (
+          <span
+            class="highlight"
+            dangerouslySetInnerHTML={{
+              __html:
+                "&nbsp;".repeat(highlight[0]) +
+                "_".repeat(highlight[1] - highlight[0]),
+            }}
+          />
+        )}
         <input
           type="text"
           class="code-input"
@@ -81,7 +92,7 @@ const Home = () => {
         />
       </div>
       <div style={{ flex: "1" }}>
-        <ParseTree code={code} />
+        <ParseTree code={code} setHighlight={setHighlight} />
       </div>
     </div>
   );

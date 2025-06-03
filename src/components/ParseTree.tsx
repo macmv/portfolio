@@ -5,10 +5,20 @@ import "./ParseTree.css";
 
 type Tree = Array<Node>;
 type Node =
-  | { type: "binary"; left: number; right: number; operator: string }
-  | { type: "literal"; value: string };
+  | {
+      start: number;
+      end: number;
+      type: "binary";
+      left: number;
+      right: number;
+      operator: string;
+    }
+  | { start: number; end: number; type: "literal"; value: string };
 
-export const ParseTree = (props: { code: string }) => {
+export const ParseTree = (props: {
+  code: string;
+  setHighlight: (highlight: [number, number] | null) => void;
+}) => {
   const [tree, setTree] = useState<Tree | string | null>(null);
 
   useEffect(() => {
@@ -56,6 +66,8 @@ export const ParseTree = (props: { code: string }) => {
               />
               <span
                 class="node"
+                onMouseOver={() => props.setHighlight([node.start, node.end])}
+                onMouseOut={() => props.setHighlight(null)}
                 style={{ marginLeft: offset, marginRight: -offset }}
               >
                 {node.operator}
