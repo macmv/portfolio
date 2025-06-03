@@ -1,0 +1,12 @@
+.terrain {
+  height: 100vh;
+  background: #0000;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.terrain > canvas {
+  height: 100vh;
+}

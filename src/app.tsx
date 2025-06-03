@@ -5,6 +5,7 @@ import { Link } from "./components/Link";
 import { currentPage, Router } from "./router";
 import { Banner } from "./components/Banner";
 import { ParseTree } from "./components/ParseTree";
+import { Terrain } from "./components/Terrain";
 
 export function App() {
   return (
@@ -41,7 +42,7 @@ const Content = () => {
 const Home = () => {
   return (
     <>
-      <Banner title="Neil Macneale" />
+      <Terrain title="Neil Macneale" />
       <div class="content"></div>
     </>
   );
