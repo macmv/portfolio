@@ -1,3 +1,8 @@
+.parse-tree {
+  display: flex;
+  justify-content: center;
+}
+
 .parse-tree .node {
   display: inline-block;
   width: 50px;

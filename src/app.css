@@ -44,5 +44,17 @@
 }
 
 .highlight > .underline {
-  border-bottom: 3px solid #0a3;
+  position: relative;
+}
+
+.highlight > .underline::after {
+  box-sizing: border-box;
+  content: '';
+  position: absolute;
+  width: 100%;
+  border: 2px solid #0a3;
+  background-color: #0a3;
+  border-radius: 5px;
+  bottom: -3px;
+  left: 0px;
 }
