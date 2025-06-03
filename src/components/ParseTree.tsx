@@ -46,13 +46,13 @@ export const ParseTree = (props: {
       const hover = parentHover || localHover;
 
       const onHover = useCallback(
-        (node: Node | null) => {
-          if (node === null) {
-            setHover(false);
-            props.setHighlight(null);
-          } else {
+        (hover: boolean) => {
+          if (hover) {
             setHover(true);
             props.setHighlight([node.start, node.end]);
+          } else {
+            setHover(false);
+            props.setHighlight(null);
           }
         },
         [node],
@@ -86,18 +86,9 @@ export const ParseTree = (props: {
                   backgroundColor: hover ? "#0a3" : "#888",
                 }}
               />
-              <span
-                class="node"
-                onMouseOver={() => onHover(node)}
-                onMouseOut={() => onHover(null)}
-                style={{
-                  marginLeft: offset,
-                  marginRight: -offset,
-                  borderColor: hover ? "#0a3" : "#888",
-                }}
-              >
+              <Node hover={hover} onHover={onHover} margin={offset}>
                 {node.operator}
-              </span>
+              </Node>
               <span
                 class="line"
                 style={{
@@ -115,16 +106,9 @@ export const ParseTree = (props: {
       } else if (node.type === "literal") {
         return {
           element: (
-            <span
-              class="node"
-              onMouseOver={() => onHover(node)}
-              onMouseOut={() => onHover(null)}
-              style={{
-                borderColor: hover ? "#0a3" : "#888",
-              }}
-            >
+            <Node hover={hover} onHover={onHover}>
               {node.value}
-            </span>
+            </Node>
           ),
           x: width / 2,
           width: width,
@@ -136,4 +120,27 @@ export const ParseTree = (props: {
 
     return <div class="parse-tree">{renderNode(tree.length - 1).element}</div>;
   }
+};
+
+const Node = (props: {
+  hover: boolean;
+  onHover: (h: boolean) => void;
+  children: string;
+  margin?: number;
+}) => {
+  return (
+    <span
+      class="node"
+      onMouseOver={() => props.onHover(true)}
+      onMouseOut={() => props.onHover(false)}
+      style={{
+        borderColor: props.hover ? "#0a3" : "#888",
+        ...(props.margin
+          ? { marginLeft: props.margin, marginRight: -props.margin }
+          : {}),
+      }}
+    >
+      {props.children}
+    </span>
+  );
 };
