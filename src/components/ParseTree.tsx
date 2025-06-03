@@ -31,10 +31,13 @@ export const ParseTree = (props: { code: string }) => {
         const left = renderNode(node.left);
         const right = renderNode(node.right);
 
-        const leftX = left.width - left.x;
+        const leftX = left.x;
         const rightX = left.width + 40 + right.x;
         const x = (leftX + rightX) / 2;
         const offset = x - left.width - 20;
+
+        const angle = Math.PI / 2 - Math.atan2(60, x - leftX);
+        const length = Math.sqrt((x - leftX) ** 2 + 60 ** 2);
 
         return {
           x,
@@ -43,11 +46,29 @@ export const ParseTree = (props: { code: string }) => {
             <span class="binary">
               <span class="child">{left.element}</span>
               <span
+                class="line"
+                style={{
+                  marginLeft: `${x}px`,
+                  marginTop: "20px",
+                  transform: `rotate(${angle}rad)`,
+                  height: length,
+                }}
+              />
+              <span
                 class="node"
                 style={{ marginLeft: offset, marginRight: -offset }}
               >
                 {node.operator}
               </span>
+              <span
+                class="line"
+                style={{
+                  marginLeft: `${x}px`,
+                  marginTop: "20px",
+                  transform: `rotate(-${angle}rad)`,
+                  height: length,
+                }}
+              />
               <span class="child">{right.element}</span>
             </span>
           ),
