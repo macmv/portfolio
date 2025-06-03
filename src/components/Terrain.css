@@ -10,3 +10,7 @@
 .terrain > canvas {
   height: 100vh;
 }
+
+.terrain > h1 {
+  font-size: min(120px, 10vw);
+}
