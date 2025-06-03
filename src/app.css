@@ -18,17 +18,31 @@
   font-size: 32px;
   width: 250px;
 
-  border: 2px solid #888;
+  border: 3px solid #888;
   border-radius: 4px;
+}
+
+.code-input:focus {
+  outline: none;
+  border-color: #23a;
 }
 
 .highlight {
   color: #0a3;
   position: absolute;
-  margin-top: 64px;
-  font-family: monospace;
-  font-size: 20px;
   width: 250px;
-  padding: 4px;
+  padding: 0px 5px;
+  margin-top: -2px;
+
+  display: flex;
+}
+
+.highlight > span {
+  font-family: monospace;
+  font-size: 32px;
   whitespace: nowrap;
+}
+
+.highlight > .underline {
+  border-bottom: 3px solid #0a3;
 }
