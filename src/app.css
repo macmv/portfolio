@@ -12,6 +12,10 @@
   background: #ddd;
 }
 
+.header-wrapper .link-wrapper {
+  font-size: min(24px, 3vw);
+}
+
 .code-input {
   resize: none;
   font-family: monospace;
