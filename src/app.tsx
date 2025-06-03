@@ -12,6 +12,7 @@ export function App() {
       <Router>
         <Header>
           <Link href="/">Home</Link>
+          <Link href="/parsers">Parsers</Link>
           <Link href="/about">About</Link>
           <Link href="/skills">Skills</Link>
           <Link href="/contact">Contact</Link>
@@ -24,6 +25,8 @@ export function App() {
 
 const Content = () => {
   switch (currentPage()) {
+    case "/parsers":
+      return <Parsers />;
     case "/about":
       return <About />;
     case "/skills":
@@ -36,12 +39,21 @@ const Content = () => {
 };
 
 const Home = () => {
+  return (
+    <>
+      <Banner title="Neil Macneale" />
+      <div class="content"></div>
+    </>
+  );
+};
+
+const Parsers = () => {
   const [code, setCode] = useState("1 + 2 * 3");
   const [highlight, setHighlight] = useState<[number, number] | null>([0, 1]);
 
   return (
     <>
-      <Banner title="Neil Macneale" />
+      <Banner title="Parsers" />
       <div class="content">
         <div
           style={{
@@ -71,12 +83,8 @@ const Home = () => {
             data-enable-grammarly="false"
             data-lt-active="false"
             value={code}
-            onKeyUp={(e) => {
-              setCode((e.target as HTMLTextAreaElement).value);
-            }}
-            onChange={(e) => {
-              setCode((e.target as HTMLTextAreaElement).value);
-            }}
+            onKeyUp={(e) => setCode((e.target as HTMLTextAreaElement).value)}
+            onChange={(e) => setCode((e.target as HTMLTextAreaElement).value)}
           />
         </div>
         <div style={{ flex: "1" }}>
