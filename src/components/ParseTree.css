@@ -6,7 +6,7 @@
   padding: 5px;
   text-align: center;
 
-  border: 2px solid #888;
+  border: 3px solid #888;
   border-radius: 25px;
   background-color: #fff;
 
@@ -26,7 +26,7 @@
 
 .parse-tree .line {
   position: absolute;
-  width: 2px;
+  width: 3px;
   background-color: #888;
   z-index: -1;
 
