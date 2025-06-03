@@ -41,7 +41,10 @@ export const Shark = () => {
         Shark!
       </span>
       {sharks.map((x, idx) => (
-        <span class="shark" style={{ marginLeft: x, bottom: 0 }}>
+        <span
+          class="shark"
+          style={{ marginLeft: x, bottom: Math.sin(x / 80) * 50 }}
+        >
           Shark {idx + 1}
         </span>
       ))}
