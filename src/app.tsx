@@ -40,12 +40,7 @@ const Content = () => {
 };
 
 const Home = () => {
-  return (
-    <>
-      <Terrain title="Neil Macneale" />
-      <div class="content"></div>
-    </>
-  );
+  return <Terrain title="Neil Macneale" />;
 };
 
 const Parsers = () => {
