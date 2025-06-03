@@ -1,0 +1,21 @@
+.shark-button {
+  position: absolute;
+  right: 20px;
+  bottom: 200px;
+
+  color: #fff;
+  background-color: #171459;
+
+  font-size: 20px;
+
+  border-radius: 10px;
+  padding: 10px;
+
+  cursor: pointer;
+  transition: transform 0.2s ease-in-out;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.shark-button:hover {
+  transform: translateY(-5px);
+}
