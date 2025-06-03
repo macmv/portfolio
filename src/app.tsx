@@ -64,7 +64,6 @@ const Parsers = () => {
             alignItems: "center",
           }}
         >
-          <h2>Parsers</h2>
           {highlight && (
             <span
               class="highlight"
@@ -86,6 +85,12 @@ const Parsers = () => {
             onKeyUp={(e) => setCode((e.target as HTMLTextAreaElement).value)}
             onChange={(e) => setCode((e.target as HTMLTextAreaElement).value)}
           />
+          <p style={{ maxWidth: "400px" }}>
+            This is a simple recursive descent parser, that builds a parse tree
+            for a mathmatical expression. Each operation is represented as a
+            node with two children, and each value in the expression is a leaf
+            node in the tree.
+          </p>
         </div>
         <div style={{ flex: "1" }}>
           <ParseTree code={code} setHighlight={setHighlight} />
