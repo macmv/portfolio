@@ -100,24 +100,27 @@ impl Parser<'_> {
     let start = self.pos;
 
     let mut lhs = self.atom()?;
-    self.skip_whitespace();
 
     loop {
+      let prev = self.pos;
+      self.skip_whitespace();
       let op = match self.head() {
         '+' => BinaryOp::Add,
         '-' => BinaryOp::Subtract,
         '*' => BinaryOp::Multiply,
         '/' => BinaryOp::Divide,
-        _ => break Ok(lhs),
+        _ => {
+          self.pos = prev;
+          break Ok(lhs);
+        }
       };
 
       if op.binding_power() <= bp {
+        self.pos = prev; // Go back before whitespace.
         break Ok(lhs);
       }
 
       self.bump(); // consume operator
-
-      self.skip_whitespace();
 
       let rhs = self.expr_bp(op.binding_power())?;
 
