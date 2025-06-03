@@ -190,4 +190,20 @@ mod tests {
   fn it_works() {
     assert_eq!(parse("1 + 2 * 3 - 4 / 5").nodes.len(), 9);
   }
+
+  #[test]
+  fn node_span_is_correct() {
+    let src = "1 * 2 + 3";
+    let t = parse(src);
+    let slice = |idx: NodeIdx| &src[t.nodes[idx].start as usize..t.nodes[idx].end as usize];
+
+    let root = t.nodes.len() - 1;
+
+    assert_eq!(slice(root), "1 * 2 + 3");
+
+    let NodeKind::Bin { left, right, .. } = t.nodes[root].kind else { panic!() };
+
+    assert_eq!(slice(left), "1 * 2");
+    assert_eq!(slice(right), "3");
+  }
 }
