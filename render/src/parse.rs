@@ -110,7 +110,7 @@ impl Parser<'_> {
         _ => break Ok(lhs),
       };
 
-      if op.binding_power() < bp {
+      if op.binding_power() <= bp {
         break Ok(lhs);
       }
 
