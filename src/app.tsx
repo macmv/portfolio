@@ -48,7 +48,7 @@ const Home = () => {
 };
 
 const Parsers = () => {
-  const [code, setCode] = useState("1 + 2 * 3");
+  const [code, setCode] = useState("1 + 2 * 3 + 4");
   const [highlight, setHighlight] = useState<[number, number] | null>([0, 1]);
 
   return (
