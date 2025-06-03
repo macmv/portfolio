@@ -21,6 +21,11 @@ export const ParseTree = (props: {
 }) => {
   const [tree, setTree] = useState<Tree | string | null>(null);
 
+  // NB: Keep up to date with CSS
+  const width = 50;
+  const height = 50;
+  const gap = 30;
+
   useEffect(() => {
     init().then(() => {
       setTree(parse(props.code));
@@ -42,16 +47,16 @@ export const ParseTree = (props: {
         const right = renderNode(node.right);
 
         const leftX = left.x;
-        const rightX = left.width + 40 + right.x;
+        const rightX = left.width + width + right.x;
         const x = (leftX + rightX) / 2;
-        const offset = x - left.width - 20;
+        const offset = x - left.width - width / 2;
 
-        const angle = Math.PI / 2 - Math.atan2(60, x - leftX);
-        const length = Math.sqrt((x - leftX) ** 2 + 60 ** 2);
+        const angle = Math.PI / 2 - Math.atan2(height + gap, x - leftX);
+        const length = Math.sqrt((x - leftX) ** 2 + (height + gap) ** 2);
 
         return {
           x,
-          width: left.width + right.width + 40,
+          width: left.width + right.width + width,
           element: (
             <span class="binary">
               <span class="child">{left.element}</span>
@@ -59,7 +64,7 @@ export const ParseTree = (props: {
                 class="line"
                 style={{
                   marginLeft: `${x}px`,
-                  marginTop: "20px",
+                  marginTop: `${height / 2}px`,
                   transform: `rotate(${angle}rad)`,
                   height: length,
                 }}
@@ -76,7 +81,7 @@ export const ParseTree = (props: {
                 class="line"
                 style={{
                   marginLeft: `${x}px`,
-                  marginTop: "20px",
+                  marginTop: `${height / 2}px`,
                   transform: `rotate(-${angle}rad)`,
                   height: length,
                 }}
@@ -88,8 +93,8 @@ export const ParseTree = (props: {
       } else if (node.type === "literal") {
         return {
           element: <span class="node">{node.value}</span>,
-          x: 20,
-          width: 40,
+          x: width / 2,
+          width: width,
         };
       } else {
         return { element: <></>, x: 0, width: 0 };
