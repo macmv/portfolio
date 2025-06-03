@@ -35,7 +35,7 @@ export const Shark = () => {
         animation.current = null;
       }
     };
-  }, [sharks.length, animation.current]);
+  }, [sharks.length]);
 
   return (
     <>
@@ -47,17 +47,28 @@ export const Shark = () => {
       >
         Shark!
       </span>
-      {sharks.map((s, idx) => (
-        <span
-          class="shark"
-          style={{
-            marginLeft: s.x,
-            bottom: Math.sin(s.x / 80 + s.offset * 2 * Math.PI) * 50,
-          }}
-        >
-          Shark {idx + 1}
-        </span>
-      ))}
+      {sharks.map((s) => {
+        const t = s.x / 100 + s.offset * 2 * Math.PI;
+        const angle = -Math.cos(t) / 2;
+        const height = Math.sin(t) * 80;
+
+        return (
+          <span
+            class="shark"
+            style={{
+              marginLeft: s.x,
+              bottom: height,
+            }}
+          >
+            <img
+              src="/assets/tigershark.gif"
+              alt="Shark"
+              width="150"
+              style={{ transform: `rotate(${angle}rad)` }}
+            />
+          </span>
+        );
+      })}
     </>
   );
 };
