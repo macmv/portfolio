@@ -79,8 +79,8 @@ export const ParseTree = (props: {
               <span
                 class="line"
                 style={{
-                  marginLeft: `${x}px`,
-                  marginTop: `${height / 2}px`,
+                  marginLeft: x,
+                  marginTop: height / 2,
                   transform: `rotate(${angle}rad)`,
                   height: length,
                   backgroundColor: hover ? "#0a3" : "#888",
@@ -92,8 +92,8 @@ export const ParseTree = (props: {
               <span
                 class="line"
                 style={{
-                  marginLeft: `${x}px`,
-                  marginTop: `${height / 2}px`,
+                  marginLeft: x,
+                  marginTop: height / 2,
                   transform: `rotate(-${angle}rad)`,
                   height: length,
                   backgroundColor: hover ? "#0a3" : "#888",
