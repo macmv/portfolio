@@ -28,6 +28,7 @@ struct Vertex {
 
 static mut STATE: Option<GpuState> = None;
 
+#[cfg(target_arch = "wasm32")]
 #[wasm_bindgen]
 pub async fn setup_render(canvas: &wgpu::web_sys::HtmlCanvasElement) {
   std::panic::set_hook(Box::new(console_error_panic_hook::hook));
@@ -119,6 +120,7 @@ struct GpuState {
   frames: u32,
 }
 
+#[cfg(target_arch = "wasm32")]
 async fn setup_instance(canvas: &wgpu::web_sys::HtmlCanvasElement) -> GpuState {
   let instance = wgpu::Instance::new(&wgpu::InstanceDescriptor {
     backends: wgpu::Backends::GL,

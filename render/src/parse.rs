@@ -45,6 +45,7 @@ impl BinaryOp {
   }
 }
 
+#[cfg(target_arch = "wasm32")]
 #[wasm_bindgen]
 pub fn parse(text: &str) -> JsValue {
   let mut parser = Parser { text, pos: 0, out: Tree { nodes: vec![] } };
@@ -177,8 +178,16 @@ impl Parser<'_> {
 mod tests {
   use super::*;
 
+  fn parse(text: &str) -> Tree {
+    let mut parser = Parser { text, pos: 0, out: Tree { nodes: vec![] } };
+    match parser.expr() {
+      Ok(_) => parser.out,
+      Err(e) => panic!("Failed to parse: {}", e),
+    }
+  }
+
   #[test]
   fn it_works() {
-    assert_eq!(parse("1 + 2 * 3 - 4 / 5"), "Parsed successfully with 7 nodes");
+    assert_eq!(parse("1 + 2 * 3 - 4 / 5").nodes.len(), 9);
   }
 }
