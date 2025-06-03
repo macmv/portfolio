@@ -1,15 +1,17 @@
 import "./Banner.css";
 import init, { setup_render, resize } from "../../render/pkg";
-import { useRef } from "preact/hooks";
+import { useEffect, useRef } from "preact/hooks";
 import { RefObject } from "preact";
 
 export const Banner = (props: { title: string }) => {
   const canvas = useRef<HTMLCanvasElement>(null);
 
-  // setupCanvas(canvas);
+  useEffect(() => {
+    setupCanvas(canvas);
+  }, [canvas.current]);
 
   window.onresize = () => {
-    // performResize(canvas.current!);
+    performResize(canvas.current!);
   };
 
   return (
