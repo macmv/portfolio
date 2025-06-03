@@ -104,14 +104,16 @@ impl Parser<'_> {
     loop {
       let prev = self.pos;
       self.skip_whitespace();
+      if self.is_complete() {
+        break Ok(lhs);
+      }
       let op = match self.head() {
         '+' => BinaryOp::Add,
         '-' => BinaryOp::Subtract,
         '*' => BinaryOp::Multiply,
         '/' => BinaryOp::Divide,
         _ => {
-          self.pos = prev;
-          break Ok(lhs);
+          return Err(format!("expected operator, found '{}'", self.head()));
         }
       };
 
@@ -145,7 +147,7 @@ impl Parser<'_> {
         NodeKind::Literal
       }
 
-      c => return Err(format!("unexpected character '{}'", c)),
+      c => return Err(format!("expected literal, found '{}'", c)),
     };
 
     let node = Node { start, end: self.pos, kind };
