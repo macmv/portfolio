@@ -14,7 +14,7 @@ export function App() {
           <Link href="/">Home</Link>
           <Link href="/parsers">Parsers</Link>
           <Link href="/about">About</Link>
-          <Link href="/skills">Skills</Link>
+          <Link href="/sharks">Sharks!</Link>
           <Link href="/contact">Contact</Link>
         </Header>
         <Content />
@@ -29,8 +29,8 @@ const Content = () => {
       return <Parsers />;
     case "/about":
       return <About />;
-    case "/skills":
-      return <Skills />;
+    case "/sharks":
+      return <Sharks />;
     case "/contact":
       return <Contact />;
     default:
@@ -116,18 +116,18 @@ const About = () => {
     </>
   );
 };
-const Skills = () => {
+const Sharks = () => {
   return (
     <>
-      <Banner title="Skills" />
-      <div>Many skills</div>
+      <Banner title="Sharks!" />
+      <div>there are many</div>
     </>
   );
 };
 const Contact = () => {
   return (
     <>
-      <Banner title="Skills" />
+      <Banner title="Contact" />
       <div>Contact me!</div>
     </>
   );
