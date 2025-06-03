@@ -1,15 +1,22 @@
 import { useEffect, useRef, useState } from "preact/hooks";
 import "./Shark.css";
 
+type Shark = {
+  x: number;
+  offset: number;
+};
+
 export const Shark = () => {
-  const [sharks, setSharks] = useState<number[]>([]);
+  const [sharks, setSharks] = useState<Shark[]>([]);
 
   const animation = useRef<number | null>(null);
   const speed = 3.0; // pixels per frame
 
   const frame = () => {
     setSharks((s) => {
-      return s.map((x) => x + speed).filter((x) => x < window.innerWidth + 100);
+      return s
+        .map((s) => ({ ...s, x: s.x + speed }))
+        .filter((s) => s.x < window.innerWidth + 100);
     });
 
     if (sharks.length > 0) {
@@ -35,15 +42,18 @@ export const Shark = () => {
       <span
         class="shark-button"
         onClick={() => {
-          setSharks((s) => [0, ...s]);
+          setSharks((s) => [{ x: 0, offset: Math.random() }, ...s]);
         }}
       >
         Shark!
       </span>
-      {sharks.map((x, idx) => (
+      {sharks.map((s, idx) => (
         <span
           class="shark"
-          style={{ marginLeft: x, bottom: Math.sin(x / 80) * 50 }}
+          style={{
+            marginLeft: s.x,
+            bottom: Math.sin(s.x / 80 + s.offset * 2 * Math.PI) * 50,
+          }}
         >
           Shark {idx + 1}
         </span>
