@@ -19,3 +19,8 @@
 .shark-button:hover {
   transform: translateY(-5px);
 }
+
+.shark {
+  position: absolute;
+  white-space: nowrap;
+}
