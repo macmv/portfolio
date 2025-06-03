@@ -1,4 +1,4 @@
-import { useEffect, useState } from "preact/hooks";
+import { useCallback, useEffect, useState } from "preact/hooks";
 import init, { parse } from "../../render/pkg";
 
 import "./ParseTree.css";
@@ -39,12 +39,28 @@ export const ParseTree = (props: {
   } else {
     const renderNode = (
       idx: number,
+      parentHover: boolean = false,
     ): { element: any; x: number; width: number } => {
       const node = tree[idx];
+      const [localHover, setHover] = useState(false);
+      const hover = parentHover || localHover;
+
+      const onHover = useCallback(
+        (node: Node | null) => {
+          if (node === null) {
+            setHover(false);
+            props.setHighlight(null);
+          } else {
+            setHover(true);
+            props.setHighlight([node.start, node.end]);
+          }
+        },
+        [node],
+      );
 
       if (node.type === "binary") {
-        const left = renderNode(node.left);
-        const right = renderNode(node.right);
+        const left = renderNode(node.left, hover);
+        const right = renderNode(node.right, hover);
 
         const leftX = left.x;
         const rightX = left.width + width + right.x;
@@ -67,13 +83,18 @@ export const ParseTree = (props: {
                   marginTop: `${height / 2}px`,
                   transform: `rotate(${angle}rad)`,
                   height: length,
+                  backgroundColor: hover ? "#0a3" : "#888",
                 }}
               />
               <span
                 class="node"
-                onMouseOver={() => props.setHighlight([node.start, node.end])}
-                onMouseOut={() => props.setHighlight(null)}
-                style={{ marginLeft: offset, marginRight: -offset }}
+                onMouseOver={() => onHover(node)}
+                onMouseOut={() => onHover(null)}
+                style={{
+                  marginLeft: offset,
+                  marginRight: -offset,
+                  borderColor: hover ? "#0a3" : "#888",
+                }}
               >
                 {node.operator}
               </span>
@@ -84,6 +105,7 @@ export const ParseTree = (props: {
                   marginTop: `${height / 2}px`,
                   transform: `rotate(-${angle}rad)`,
                   height: length,
+                  backgroundColor: hover ? "#0a3" : "#888",
                 }}
               />
               <span class="child">{right.element}</span>
@@ -92,7 +114,18 @@ export const ParseTree = (props: {
         };
       } else if (node.type === "literal") {
         return {
-          element: <span class="node">{node.value}</span>,
+          element: (
+            <span
+              class="node"
+              onMouseOver={() => onHover(node)}
+              onMouseOut={() => onHover(null)}
+              style={{
+                borderColor: hover ? "#0a3" : "#888",
+              }}
+            >
+              {node.value}
+            </span>
+          ),
           x: width / 2,
           width: width,
         };
