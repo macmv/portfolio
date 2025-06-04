@@ -77,26 +77,24 @@ export const ParseTree = (props: {
             <span class="binary">
               <span class="child">{left.element}</span>
               <span
-                class="line"
+                class={`line${hover ? " hover" : ""}`}
                 style={{
                   marginLeft: x,
                   marginTop: height / 2,
                   transform: `rotate(${angle}rad)`,
                   height: length,
-                  backgroundColor: hover ? "var(--green)" : "var(--light-gray)",
                 }}
               />
               <Node hover={hover} onHover={onHover} margin={offset}>
                 {node.operator}
               </Node>
               <span
-                class="line"
+                class={`line${hover ? " hover" : ""}`}
                 style={{
                   marginLeft: x,
                   marginTop: height / 2,
                   transform: `rotate(-${angle}rad)`,
                   height: length,
-                  backgroundColor: hover ? "var(--green)" : "var(--light-gray)",
                 }}
               />
               <span class="child">{right.element}</span>
@@ -130,15 +128,14 @@ const Node = (props: {
 }) => {
   return (
     <span
-      class="node"
+      class={`node${props.hover ? " hover" : ""}`}
       onMouseOver={() => props.onHover(true)}
       onMouseOut={() => props.onHover(false)}
-      style={{
-        borderColor: props.hover ? "var(--green)" : "var(--light-gray)",
-        ...(props.margin
+      style={
+        props.margin
           ? { marginLeft: props.margin, marginRight: -props.margin }
-          : {}),
-      }}
+          : {}
+      }
     >
       {props.children}
     </span>

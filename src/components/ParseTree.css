@@ -21,6 +21,10 @@
   font-size: 24px;
 }
 
+.parse-tree .node.hover {
+  border-color: var(--green);
+}
+
 .parse-tree .binary {
   display: flex;
   flex-direction: row;
@@ -34,6 +38,11 @@
   position: absolute;
   width: 3px;
   z-index: -1;
+  background-color: var(--light-gray);
 
   transform-origin: top;
+}
+
+.parse-tree .line.hover {
+  background-color: var(--green);
 }
