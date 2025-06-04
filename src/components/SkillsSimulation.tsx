@@ -24,8 +24,8 @@ export const SkillsSimulation = () => {
 
     for (let i = 0; i < numObjects; i++) {
       let rigidBodyDesc = RAPIER.RigidBodyDesc.dynamic().setTranslation(
-        i * (10 / numObjects),
-        1.0,
+        ((i % 8) * 10) / 8 + 0.5 + Math.random() * 0.4 - 0.2,
+        1.0 * Math.floor(i / 8) + 0.5,
       );
       let rigidBody = world.createRigidBody(rigidBodyDesc);
 
