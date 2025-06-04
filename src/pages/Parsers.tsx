@@ -21,35 +21,7 @@ export const Parsers = () => {
             alignItems: "center",
           }}
         >
-          <div>
-            {highlight && (
-              <div class="highlight">
-                <span
-                  class="spacer"
-                  dangerouslySetInnerHTML={{
-                    __html: "&nbsp;".repeat(highlight[0]),
-                  }}
-                />
-                <span
-                  class="underline"
-                  dangerouslySetInnerHTML={{
-                    __html: "&nbsp;".repeat(highlight[1] - highlight[0]),
-                  }}
-                />
-              </div>
-            )}
-            <input
-              type="text"
-              class="code-input"
-              data-gramm="false"
-              data-gramm_editor="false"
-              data-enable-grammarly="false"
-              data-lt-active="false"
-              value={code}
-              onKeyUp={(e) => setCode((e.target as HTMLTextAreaElement).value)}
-              onChange={(e) => setCode((e.target as HTMLTextAreaElement).value)}
-            />
-          </div>
+          <CodeInput code={code} setCode={setCode} highlight={highlight} />
           <p style={{ maxWidth: "400px" }}>
             This is a simple recursive descent parser, that builds a parse tree
             for a mathmatical expression. Each operation is represented as a
@@ -62,5 +34,43 @@ export const Parsers = () => {
         </div>
       </div>
     </>
+  );
+};
+
+const CodeInput = (props: {
+  code: string;
+  setCode: (code: string) => void;
+  highlight: [number, number] | null;
+}) => {
+  return (
+    <div>
+      {props.highlight && (
+        <div class="highlight">
+          <span
+            class="spacer"
+            dangerouslySetInnerHTML={{
+              __html: "&nbsp;".repeat(props.highlight[0]),
+            }}
+          />
+          <span
+            class="underline"
+            dangerouslySetInnerHTML={{
+              __html: "&nbsp;".repeat(props.highlight[1] - props.highlight[0]),
+            }}
+          />
+        </div>
+      )}
+      <input
+        type="text"
+        class="code-input"
+        data-gramm="false"
+        data-gramm_editor="false"
+        data-enable-grammarly="false"
+        data-lt-active="false"
+        value={props.code}
+        onKeyUp={(e) => props.setCode((e.target as HTMLTextAreaElement).value)}
+        onChange={(e) => props.setCode((e.target as HTMLTextAreaElement).value)}
+      />
+    </div>
   );
 };
