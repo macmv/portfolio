@@ -5,7 +5,7 @@ import "./Physics.css";
 export const Physics = () => {
   const [objects, setObjects] = useState<RAPIER.RigidBody[]>([]);
 
-  const numObjects = 20;
+  const numObjects = 24;
 
   useEffect(() => {
     // Use the RAPIER module here.
@@ -24,12 +24,12 @@ export const Physics = () => {
 
     for (let i = 0; i < numObjects; i++) {
       let rigidBodyDesc = RAPIER.RigidBodyDesc.dynamic().setTranslation(
-        ((i % 8) * 10) / 8 + 0.5 + Math.random() * 0.4 - 0.2,
-        1.0 * Math.floor(i / 8) + 0.5,
+        ((i % 8) * 10) / 8 + 0.5 + Math.random() * 0.5 - 0.25,
+        1.5 * Math.floor(i / 8) + 0.5,
       );
       let rigidBody = world.createRigidBody(rigidBodyDesc);
 
-      let colliderDesc = RAPIER.ColliderDesc.ball(0.5);
+      let colliderDesc = RAPIER.ColliderDesc.ball(0.5).setRestitution(0.5);
       world.createCollider(colliderDesc, rigidBody);
     }
 
