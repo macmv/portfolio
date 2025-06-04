@@ -181,6 +181,11 @@
     "@babel/helper-string-parser" "^7.25.9"
     "@babel/helper-validator-identifier" "^7.25.9"
 
+"@dimforge/rapier2d@^0.17.3":
+  version "0.17.3"
+  resolved "https://registry.yarnpkg.com/@dimforge/rapier2d/-/rapier2d-0.17.3.tgz#9bca5aaa0333cf3dafc0a6b72ff8c1b5ba14b63c"
+  integrity sha512-yWV3FTlOqPoeEpB2ptv//sb6hq6E1MO6u7auMnC49SawdUMD3ZGrRtpv52YZfL44D90AWxu6GNBseq00kdn5nA==
+
 "@esbuild/aix-ppc64@0.25.2":
   version "0.25.2"
   resolved "https://registry.yarnpkg.com/@esbuild/aix-ppc64/-/aix-ppc64-0.25.2.tgz#b87036f644f572efb2b3c75746c97d1d2d87ace8"
