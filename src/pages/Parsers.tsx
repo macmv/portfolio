@@ -2,6 +2,8 @@ import { useState } from "preact/hooks";
 import { Banner } from "../components/Banner";
 import { ParseTree } from "../components/ParseTree";
 
+import "./Parsers.css";
+
 export const Parsers = () => {
   const [code, setCode] = useState("1 + 2 * 3 + 4");
   const [highlight, setHighlight] = useState<[number, number] | null>(null);
