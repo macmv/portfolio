@@ -3,6 +3,7 @@
   --light-gray: #888;
 
   --blue: #238;
+  --light-blue: #67e;
   --green: #5a4;
 
   --text: var(--gray);
@@ -19,4 +20,13 @@
 
 .header-wrapper .link-wrapper {
   font-size: min(24px, 3vw);
+}
+
+a {
+  color: var(--light-blue);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
 }
