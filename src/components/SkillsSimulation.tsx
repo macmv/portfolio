@@ -58,18 +58,23 @@ export const SkillsSimulation = () => {
   // The world is 700px wide, and that is 10m wide in the simulation.
   const scale = 700 / 10;
 
+  const [highlighted, setHighlighted] = useState<number | null>(null);
+
   return (
     <div class="skills-sim">
       {objects.map((obj, index) => (
         <div
           key={index}
           class="object"
+          onMouseOver={() => setHighlighted(index)}
+          onMouseOut={() => setHighlighted(null)}
           style={{
             marginLeft: `${obj.x * scale - scale / 2}px`,
             bottom: `${obj.y * scale + 5}px`,
             width: scale,
             height: scale,
             borderRadius: "50%",
+            borderColor: highlighted === index ? "red" : "black",
           }}
         />
       ))}
