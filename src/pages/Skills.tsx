@@ -14,35 +14,37 @@ export const Skills = () => {
           </span>
 
           <table class="skills">
-            <tr>
-              <td class="category">Languages</td>
-              <td>
-                Rust, C/C++, Java/Scala, Python, Go, Ruby, Bash,
-                Typescript/Javascript
-              </td>
-            </tr>
-            <tr>
-              <td class="category">Tooling</td>
-              <td>
-                gRPC/Protobuf, Datadog, React, Vite, PagerDuty, Firestore,
-                Fauna, Snowflake
-              </td>
-            </tr>
-            <tr>
-              <td class="category">Infrastructure</td>
-              <td>AWS, GCloud</td>
-            </tr>
-            <tr>
-              <td class="category">Dev Tooling</td>
-              <td>
-                Git, IntelliJ, VsCode, Jira, Concourse CI, Circle CI,
-                GitHub/GitHub Actions
-              </td>
-            </tr>
-            <tr>
-              <td class="category">Vim or Emacs?</td>
-              <td>Vim, for life.</td>
-            </tr>
+            <tbody>
+              <tr>
+                <td class="category">Languages</td>
+                <td>
+                  Rust, C/C++, Java/Scala, Python, Go, Ruby, Bash,
+                  Typescript/Javascript
+                </td>
+              </tr>
+              <tr>
+                <td class="category">Tooling</td>
+                <td>
+                  gRPC/Protobuf, Datadog, React, Vite, PagerDuty, Firestore,
+                  Fauna, Snowflake
+                </td>
+              </tr>
+              <tr>
+                <td class="category">Infrastructure</td>
+                <td>AWS, GCloud</td>
+              </tr>
+              <tr>
+                <td class="category">Dev Tooling</td>
+                <td>
+                  Git, IntelliJ, VsCode, Jira, Concourse CI, Circle CI,
+                  GitHub/GitHub Actions
+                </td>
+              </tr>
+              <tr>
+                <td class="category">Vim or Emacs?</td>
+                <td>Vim, for life.</td>
+              </tr>
+            </tbody>
           </table>
         </div>
       </div>
