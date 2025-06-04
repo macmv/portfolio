@@ -1,4 +1,4 @@
-.terrain {
+.home {
   height: 100vh;
   background: #0000;
 
@@ -7,10 +7,6 @@
   justify-content: center;
 }
 
-.terrain > canvas {
-  height: 100vh;
-}
-
-.terrain > h1 {
+.home > h1 {
   font-size: min(120px, 10vw);
 }

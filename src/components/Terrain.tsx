@@ -1,4 +1,3 @@
-import "./Terrain.css";
 import init, { setup_render, resize } from "../../render/pkg";
 import { useEffect, useRef } from "preact/hooks";
 import { RefObject } from "preact";
