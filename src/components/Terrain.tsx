@@ -13,7 +13,12 @@ export const Terrain = () => {
     performResize(canvas.current!);
   };
 
-  return <canvas ref={canvas} style="position: fixed; z-index: -1" />;
+  return (
+    <canvas
+      ref={canvas}
+      style={{ position: "fixed", zIndex: -1, height: "100vh" }}
+    />
+  );
 };
 
 const setupCanvas = async (canvas: RefObject<HTMLCanvasElement>) => {
