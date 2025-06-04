@@ -7,10 +7,6 @@
   justify-content: center;
 }
 
-.banner > canvas {
-  height: 400px;
-}
-
 .banner > h1 {
   color: var(--text);
   font-size: 64px;
