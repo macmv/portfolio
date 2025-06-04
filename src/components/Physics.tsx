@@ -111,8 +111,8 @@ export const Physics = () => {
             }
           }}
           style={{
-            marginLeft: `${obj.translation().x * scale - scale / 2}px`,
-            bottom: `${obj.translation().y * scale + 5}px`,
+            left: obj.translation().x * scale - scale / 2 - 3,
+            bottom: obj.translation().y * scale - scale / 2 - 3,
             width: scale,
             height: scale,
             borderRadius: "50%",
