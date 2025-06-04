@@ -451,8 +451,8 @@ fn build_terrain() -> Vec<Vertex> {
       */
       let p = points[x * WIDTH + y];
 
-      out.push(Vertex { pos: [p.x, p.y, p.z], things: [1.0, 0.0, 0.0, 1.0] });
-      out.push(Vertex { pos: [p.x, p.y, p.z], things: [0.0, 1.0, 0.0, 1.0] });
+      out.push(Vertex { pos: [p.x, p.y, p.z], things: [1.0, -0.01, 0.0, 1.0] });
+      out.push(Vertex { pos: [p.x, p.y, p.z], things: [-0.01, 1.0, 0.0, 1.0] });
       out.push(Vertex { pos: [p.x, p.y, p.z], things: [1.0, 1.0, 0.0, 1.0] });
     }
   }

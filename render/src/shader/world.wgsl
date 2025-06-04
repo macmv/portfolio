@@ -28,7 +28,7 @@ fn vs_main(
 
   var screen_space = mat * vec4<f32>(moved, 1.0);
   var logical_space = screen_space.xy;
-  let original = logical_space;
+  let original = logical_space - vec2(0.05, 0.05);
   screen_space.x += (things.x * 4.0 - 3.0) * POINT_SIZE / aspect;
   screen_space.y += (things.y * 4.0 - 3.0) * POINT_SIZE;
   logical_space.x += (things.x * 4.0 - 3.0) * POINT_SIZE;
