@@ -1,6 +1,6 @@
 .code-input {
   resize: none;
-  font-family: monospace;
+  font-family: "Martian Mono", monospace;
   font-size: 32px;
   width: 400px;
 
@@ -28,7 +28,7 @@
 }
 
 .highlight > span {
-  font-family: monospace;
+  font-family: "Martian Mono", monospace;
   font-size: 32px;
   whitespace: nowrap;
 }
