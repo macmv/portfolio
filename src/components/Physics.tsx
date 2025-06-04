@@ -1,8 +1,8 @@
 import { useEffect, useState } from "preact/hooks";
 import RAPIER from "@dimforge/rapier2d";
-import "./SkillsSimulation.css";
+import "./Physics.css";
 
-export const SkillsSimulation = () => {
+export const Physics = () => {
   const [objects, setObjects] = useState<RAPIER.RigidBody[]>([]);
 
   const numObjects = 20;
@@ -63,7 +63,7 @@ export const SkillsSimulation = () => {
 
   return (
     <div
-      class="skills-sim"
+      class="physics-sim"
       onMouseDown={(e) => {
         if (highlighted !== null) {
           setMouseStart([e.clientX, e.clientY]);

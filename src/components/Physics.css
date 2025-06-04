@@ -1,4 +1,4 @@
-.skills-sim {
+.physics-sim {
   width: 700px;
   height: 200px;
 
@@ -6,12 +6,12 @@
   border-radius: 10px;
 }
 
-.skills-sim .object {
+.physics-sim .object {
   position: absolute;
   border: 3px solid var(--blue);
 }
 
-.skills-sim .object:hover {
+.physics-sim .object:hover {
   cursor: pointer;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }

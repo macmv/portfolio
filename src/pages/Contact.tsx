@@ -1,5 +1,5 @@
 import { Banner } from "../components/Banner";
-import { SkillsSimulation } from "../components/SkillsSimulation";
+import { Physics } from "../components/Physics";
 
 export const Contact = () => {
   return (
@@ -9,7 +9,7 @@ export const Contact = () => {
 
       <span class="skills-intro">And, for fun:</span>
 
-      <SkillsSimulation />
+      <Physics />
     </>
   );
 };
