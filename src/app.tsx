@@ -12,7 +12,7 @@ export function App() {
         <Header>
           <Link href="/">Home</Link>
           <Link href="/parsers">Parsers</Link>
-          <Link href="/about">About</Link>
+          <Link href="/skills">Skills</Link>
           <Link href="/sharks">Sharks!</Link>
           <Link href="/contact">Contact</Link>
         </Header>
@@ -27,8 +27,8 @@ const Content = () => {
   switch (currentPage()) {
     case "/parsers":
       return <pages.Parsers />;
-    case "/about":
-      return <pages.About />;
+    case "/skills":
+      return <pages.Skills />;
     case "/sharks":
       return <pages.Sharks />;
     case "/contact":
