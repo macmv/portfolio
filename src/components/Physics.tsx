@@ -113,10 +113,7 @@ export const Physics = () => {
           style={{
             left: obj.translation().x * scale - scale / 2 - 3,
             bottom: obj.translation().y * scale - scale / 2 - 3,
-            width: scale,
-            height: scale,
-            borderRadius: "50%",
-            borderColor: highlighted === index ? "red" : "black",
+            ...(highlighted === index ? { borderColor: "var(--green)" } : {}),
           }}
         />
       ))}

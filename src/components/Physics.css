@@ -13,9 +13,17 @@
 .physics-sim .object {
   position: absolute;
   border: 3px solid var(--blue);
+  width: 70px;
+  height: 70px;
+  border-radius: 35px;
+  border-color: var(--gray);
 }
 
 .physics-sim .object:hover {
   cursor: pointer;
+}
+
+.physics-sim .object:active {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  z-index: 1;
 }
