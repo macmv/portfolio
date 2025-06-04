@@ -1,5 +1,6 @@
 import { Banner } from "../components/Banner";
 import "./Sharks.css";
+import tigershark from "../../assets/tigershark.png";
 
 export const Sharks = () => {
   return (
@@ -14,7 +15,7 @@ export const Sharks = () => {
           </span>
         </span>
         <span class="section">
-          <img src="/assets/tigershark.png" alt="Tiger Shark" width="800" />
+          <img src={tigershark} alt="Tiger Shark" width="800" />
         </span>
       </div>
     </>

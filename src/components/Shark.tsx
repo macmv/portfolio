@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "preact/hooks";
 import "./Shark.css";
+import tigershark from "../../assets/tigershark.gif";
 
 type Shark = {
   x: number;
@@ -61,7 +62,7 @@ export const Shark = () => {
             }}
           >
             <img
-              src="/assets/tigershark.gif"
+              src={tigershark}
               alt="Shark"
               width="150"
               style={{ transform: `rotate(${angle}rad)` }}
