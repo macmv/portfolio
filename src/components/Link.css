@@ -1,7 +1,7 @@
 .link-wrapper {
   padding: 10px;
 
-  text-decoration: none;
+  text-decoration: none !important;
   color: var(--text);
   font-weight: 600;
 }
