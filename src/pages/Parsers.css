@@ -29,7 +29,6 @@
 .highlight > span {
   font-family: "Martian Mono", monospace;
   font-size: 32px;
-  whitespace: nowrap;
 }
 
 .highlight > .underline {
