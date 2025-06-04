@@ -23,6 +23,6 @@
 }
 
 .shark {
-  position: absolute;
+  position: fixed;
   white-space: nowrap;
 }
