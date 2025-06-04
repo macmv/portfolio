@@ -46,4 +46,15 @@
   border-radius: 5px;
   bottom: -5px;
   left: 0px;
+
+  animation: slide-in 200ms 1;
+}
+
+@keyframes slide-in {
+  0% {
+    width: 0;
+  }
+  100% {
+    width: 100%;
+  }
 }
