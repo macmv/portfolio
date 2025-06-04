@@ -3,7 +3,7 @@ import init, { setup_render, resize } from "../../render/pkg";
 import { useEffect, useRef } from "preact/hooks";
 import { RefObject } from "preact";
 
-export const Terrain = (props: { title: string }) => {
+export const Terrain = () => {
   const canvas = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
@@ -14,12 +14,7 @@ export const Terrain = (props: { title: string }) => {
     performResize(canvas.current!);
   };
 
-  return (
-    <div class="terrain">
-      <canvas ref={canvas} style="position: fixed; z-index: -1" />
-      <h1>{props.title}</h1>
-    </div>
-  );
+  return <canvas ref={canvas} style="position: fixed; z-index: -1" />;
 };
 
 const setupCanvas = async (canvas: RefObject<HTMLCanvasElement>) => {
