@@ -5,6 +5,9 @@
 
   border: 3px solid var(--blue);
   border-radius: 10px;
+  border-top: none;
+  border-top-left-radius: 0px;
+  border-top-right-radius: 0px;
 }
 
 .physics-sim .object {
