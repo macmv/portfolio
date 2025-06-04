@@ -345,11 +345,11 @@ impl GpuState {
     let mut encoder =
       self.device.create_command_encoder(&wgpu::CommandEncoderDescriptor::default());
 
-    let time = self.frames as f32 / 500.0;
+    let time = self.frames as f32 / 500.0 + 15.0;
 
     let yaw = time / 20.0;
-    let pos = Point3::new(yaw.cos() * 40.0 + 100.0, 20.0, yaw.sin() * 40.0 + 100.0);
-    let target = Point3::new(100.0, 0.0, 100.0);
+    let pos = Point3::new(yaw.cos() * 40.0 + 200.0, 25.0, yaw.sin() * 40.0 + 200.0);
+    let target = Point3::new(200.0, 0.0, 200.0);
     self.view = Matrix4::look_at_rh(&pos, &target, &Vector3::y());
 
     self.frames += 1;
@@ -421,8 +421,8 @@ impl GpuState {
 }
 
 fn build_terrain() -> Vec<Vertex> {
-  const WIDTH: usize = 200;
-  const HEIGHT: usize = 200;
+  const WIDTH: usize = 400;
+  const HEIGHT: usize = 400;
 
   let mut points = vec![Point3::new(0.0, 0.0, 0.0); WIDTH * HEIGHT];
   let mut rng = rand::rngs::SmallRng::from_seed([0; 32]);
