@@ -1,38 +1,78 @@
-import { useEffect } from "preact/hooks";
+import { useEffect, useState } from "preact/hooks";
 import RAPIER from "@dimforge/rapier2d";
+import "./SkillsSimulation.css";
 
 export const SkillsSimulation = () => {
+  const [objects, setObjects] = useState<RAPIER.Vector2[]>([]);
+
+  const numObjects = 20;
+
   useEffect(() => {
     // Use the RAPIER module here.
     let gravity = { x: 0.0, y: -9.81 };
     let world = new RAPIER.World(gravity);
 
-    // Create the ground
-    let groundColliderDesc = RAPIER.ColliderDesc.cuboid(10.0, 0.1);
-    world.createCollider(groundColliderDesc);
+    world.createCollider(
+      RAPIER.ColliderDesc.cuboid(10.0, 0.1).setTranslation(5.0, -0.05),
+    );
+    world.createCollider(
+      RAPIER.ColliderDesc.cuboid(0.1, 10.0).setTranslation(-0.05, 5.0),
+    );
+    world.createCollider(
+      RAPIER.ColliderDesc.cuboid(0.1, 10.0).setTranslation(10.05, 5.0),
+    );
 
-    // Create a dynamic rigid-body.
-    let rigidBodyDesc = RAPIER.RigidBodyDesc.dynamic().setTranslation(0.0, 1.0);
-    let rigidBody = world.createRigidBody(rigidBodyDesc);
+    for (let i = 0; i < numObjects; i++) {
+      let rigidBodyDesc = RAPIER.RigidBodyDesc.dynamic().setTranslation(
+        i * (10 / numObjects),
+        1.0,
+      );
+      let rigidBody = world.createRigidBody(rigidBodyDesc);
 
-    // Create a cuboid collider attached to the dynamic rigidBody.
-    let colliderDesc = RAPIER.ColliderDesc.cuboid(0.5, 0.5);
-    world.createCollider(colliderDesc, rigidBody);
+      let colliderDesc = RAPIER.ColliderDesc.ball(0.5);
+      world.createCollider(colliderDesc, rigidBody);
+    }
 
-    // Game loop. Replace by your own game loop system.
-    let gameLoop = () => {
-      // Step the simulation forward.
+    let timeout = 0;
+
+    let simLoop = () => {
       world.step();
 
-      // Get and print the rigid-body's position.
-      let position = rigidBody.translation();
-      console.log("Rigid-body position: ", position.x, position.y);
+      const objects = [] as RAPIER.Vector2[];
+      world.forEachRigidBody((body) => {
+        objects.push(body.translation());
+      });
+      setObjects(objects);
 
-      setTimeout(gameLoop, 16);
+      timeout = setTimeout(simLoop, 16);
     };
 
-    gameLoop();
+    simLoop();
+
+    return () => {
+      clearTimeout(timeout);
+      world.free();
+    };
   }, []);
 
-  return <canvas />;
+  // The world is 700px wide, and that is 10m wide in the simulation.
+  const scale = 700 / 10;
+
+  return (
+    <div class="skills-sim">
+      {objects.map((obj, index) => (
+        <div
+          key={index}
+          class="object"
+          style={{
+            marginLeft: `${obj.x * scale - scale / 2}px`,
+            bottom: `${obj.y * scale + 5}px`,
+            width: scale,
+            height: scale,
+            borderRadius: "50%",
+          }}
+        />
+      ))}
+    </div>
+  );
 };
