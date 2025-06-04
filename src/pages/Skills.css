@@ -1,0 +1,30 @@
+.skills-outer {
+  display: flex;
+}
+
+.skills-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  margin: auto;
+}
+
+.skills-intro {
+  color: var(--text);
+  max-width: 500px;
+}
+
+.skills {
+  border: 1px solid var(--blue);
+
+  border-radius: 10px;
+}
+
+.skills td,th {
+  padding: 5px;
+}
+
+.skills .category {
+  color: var(--text);
+  font-weight: bold;
+}
