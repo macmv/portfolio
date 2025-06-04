@@ -45,9 +45,9 @@ fn fs_main(
   let dist = sqrt(diff.x * diff.x + diff.y * diff.y);
 
   if dist > POINT_SIZE + 0.05 {
-    discard;
+    return vec4<f32>(0.4, 0.4, 0.4, 0.0);
   } else if dist > POINT_SIZE {
-    let alpha = (POINT_SIZE - dist) / 0.05;
+    let alpha = 1.0 - (dist - POINT_SIZE) / 0.05;
     return vec4<f32>(0.4, 0.4, 0.4, alpha);
   } else {
     return vec4<f32>(0.4, 0.4, 0.4, 1.0);
