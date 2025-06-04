@@ -81,7 +81,7 @@ export const ParseTree = (props: {
                 style={{
                   marginLeft: x,
                   marginTop: height / 2,
-                  transform: `rotate(${angle}rad)`,
+                  transform: `${hover ? "translateY(-2px) " : ""}rotate(${angle}rad)`,
                   height: length,
                 }}
               />
@@ -93,7 +93,7 @@ export const ParseTree = (props: {
                 style={{
                   marginLeft: x,
                   marginTop: height / 2,
-                  transform: `rotate(-${angle}rad)`,
+                  transform: `${hover ? "translateY(-2px) " : ""}rotate(-${angle}rad)`,
                   height: length,
                 }}
               />
