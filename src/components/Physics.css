@@ -1,0 +1,17 @@
+.physics-sim {
+  width: 700px;
+  height: 200px;
+
+  border: 3px solid var(--blue);
+  border-radius: 10px;
+}
+
+.physics-sim .object {
+  position: absolute;
+  border: 3px solid var(--blue);
+}
+
+.physics-sim .object:hover {
+  cursor: pointer;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
