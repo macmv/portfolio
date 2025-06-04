@@ -17,16 +17,16 @@
   left: -2px;
   bottom: -2px;
 
-  border: 2px solid var(--text);
+  border: 2px solid var(--blue);
   border-radius: 2px;
-  border-left: 0px solid var(--text);
-  border-right: 0px solid var(--text);
+  border-left-width: 0px;
+  border-right-width: 0px;
 
   transition: border-width 100ms, width 100ms;
 }
 
 .link-wrapper:hover > .link-content::after {
-  border-left: 2px solid var(--text);
-  border-right: 2px solid var(--text);
+  border-left-width: 2px;
+  border-right-width: 2px;
   width: 100%;
 }
