@@ -11,7 +11,7 @@
   padding: 5px;
   text-align: center;
 
-  border: 3px solid #888;
+  border: 3px solid var(--light-gray);
   border-radius: 25px;
   background-color: #fff;
 
@@ -33,7 +33,6 @@
 .parse-tree .line {
   position: absolute;
   width: 3px;
-  background-color: #888;
   z-index: -1;
 
   transform-origin: top;

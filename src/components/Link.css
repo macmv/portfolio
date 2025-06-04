@@ -2,7 +2,7 @@
   padding: 10px;
 
   text-decoration: none;
-  color: #333;
+  color: var(--text);
   font-weight: 600;
 }
 
@@ -17,16 +17,16 @@
   left: -2px;
   bottom: -2px;
 
-  border: 2px solid #333;
+  border: 2px solid var(--text);
   border-radius: 2px;
-  border-left: 0px solid #333;
-  border-right: 0px solid #333;
+  border-left: 0px solid var(--text);
+  border-right: 0px solid var(--text);
 
   transition: border-width 100ms, width 100ms;
 }
 
 .link-wrapper:hover > .link-content::after {
-  border-left: 2px solid #333;
-  border-right: 2px solid #333;
+  border-left: 2px solid var(--text);
+  border-right: 2px solid var(--text);
   width: 100%;
 }

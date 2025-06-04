@@ -4,7 +4,7 @@
   bottom: 200px;
 
   color: #fff;
-  background-color: #171459;
+  background-color: var(--blue);
 
   font-size: 20px;
 

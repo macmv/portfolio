@@ -12,6 +12,6 @@
 }
 
 .banner > h1 {
-  color: #333;
+  color: var(--text);
   font-size: 64px;
 }
