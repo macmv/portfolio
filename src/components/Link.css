@@ -2,7 +2,7 @@
   padding: 10px;
 
   text-decoration: none;
-  color: inherit;
+  color: #333;
 }
 
 .link-content {
@@ -16,16 +16,16 @@
   left: -2px;
   bottom: -2px;
 
-  border: 2px solid #000;
+  border: 2px solid #333;
   border-radius: 2px;
-  border-left: 0px solid #000;
-  border-right: 0px solid #000;
+  border-left: 0px solid #333;
+  border-right: 0px solid #333;
 
   transition: border-width 100ms, width 100ms;
 }
 
 .link-wrapper:hover > .link-content::after {
-  border-left: 2px solid #000;
-  border-right: 2px solid #000;
+  border-left: 2px solid #333;
+  border-right: 2px solid #333;
   width: 100%;
 }
