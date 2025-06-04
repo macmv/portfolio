@@ -1,4 +1,5 @@
 import { Banner } from "../components/Banner";
+import { SkillsSimulation } from "../components/SkillsSimulation";
 import "./Skills.css";
 
 export const Skills = () => {
@@ -44,6 +45,10 @@ export const Skills = () => {
               <td>Vim, for life.</td>
             </tr>
           </table>
+
+          <span class="skills-intro">Or, in a more visual form:</span>
+
+          <SkillsSimulation />
         </div>
       </div>
     </>
