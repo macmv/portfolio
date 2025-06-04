@@ -1,3 +1,13 @@
+:root {
+  --gray: #333;
+  --light-gray: #888;
+
+  --blue: #238;
+  --green: #5a4;
+
+  --text: var(--gray);
+}
+
 .wrapper {
   width: 100%;
 }

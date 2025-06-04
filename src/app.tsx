@@ -3,6 +3,7 @@ import "./app.css";
 import { Link } from "./components/Link";
 import { currentPage, Router } from "./router";
 import * as pages from "./pages";
+import { Shark } from "./components/Shark";
 
 export function App() {
   return (
@@ -16,6 +17,7 @@ export function App() {
           <Link href="/contact">Contact</Link>
         </Header>
         <Content />
+        <Shark />
       </Router>
     </div>
   );
