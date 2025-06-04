@@ -15,7 +15,7 @@
   font-size: min(120px, 10vw);
   margin: 0;
 
-  text-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+  text-shadow: 0 10px 20px #fff;
 }
 
 .home > h2 {
@@ -23,5 +23,5 @@
   font-size: min(40px, 3.5vw);
   margin: 0;
 
-  text-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+  text-shadow: 0 5px 10px #fff;
 }
