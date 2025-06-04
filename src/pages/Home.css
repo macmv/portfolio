@@ -18,6 +18,10 @@
   text-shadow: 0 10px 20px #fff;
 }
 
+.wrapper:has(.home) .link-wrapper {
+  text-shadow: 0 5px 10px #fff;
+}
+
 .home > h2 {
   color: #333;
   font-size: min(40px, 3.5vw);
