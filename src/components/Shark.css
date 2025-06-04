@@ -12,7 +12,7 @@
   padding: 10px;
 
   cursor: pointer;
-  transition: transform 0.2s ease-in-out;
+  transition: all 0.1s ease-in-out;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 
   user-select: none;
@@ -20,6 +20,7 @@
 
 .shark-button:hover {
   transform: translateY(-5px);
+  background-color: var(--light-blue);
 }
 
 .shark {
