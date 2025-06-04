@@ -3,7 +3,7 @@ import RAPIER from "@dimforge/rapier2d";
 import "./SkillsSimulation.css";
 
 export const SkillsSimulation = () => {
-  const [objects, setObjects] = useState<RAPIER.Vector2[]>([]);
+  const [objects, setObjects] = useState<RAPIER.RigidBody[]>([]);
 
   const numObjects = 20;
 
@@ -38,9 +38,9 @@ export const SkillsSimulation = () => {
     let simLoop = () => {
       world.step();
 
-      const objects = [] as RAPIER.Vector2[];
+      const objects = [] as RAPIER.RigidBody[];
       world.forEachRigidBody((body) => {
-        objects.push(body.translation());
+        objects.push(body);
       });
       setObjects(objects);
 
@@ -59,18 +59,60 @@ export const SkillsSimulation = () => {
   const scale = 700 / 10;
 
   const [highlighted, setHighlighted] = useState<number | null>(null);
+  const [mouseStart, setMouseStart] = useState<[number, number] | null>(null);
 
   return (
-    <div class="skills-sim">
+    <div
+      class="skills-sim"
+      onMouseDown={(e) => {
+        if (highlighted !== null) {
+          setMouseStart([e.clientX, e.clientY]);
+          objects[highlighted].setGravityScale(0.0, true);
+        }
+      }}
+      onMouseUp={() => {
+        if (highlighted !== null) {
+          objects[highlighted].setGravityScale(1.0, true);
+        }
+        setMouseStart(null);
+        setHighlighted(null);
+      }}
+      onMouseMove={(e) => {
+        if (highlighted !== null && mouseStart !== null) {
+          const obj = objects[highlighted];
+
+          const dx = e.clientX - mouseStart[0];
+          const dy = e.clientY - mouseStart[1];
+          setMouseStart([e.clientX, e.clientY]);
+
+          obj.setTranslation(
+            new RAPIER.Vector2(
+              obj.translation().x + dx / scale,
+              obj.translation().y - dy / scale,
+            ),
+            true,
+          );
+          obj.setLinvel(new RAPIER.Vector2(0, 0), true);
+        }
+      }}
+    >
       {objects.map((obj, index) => (
         <div
           key={index}
           class="object"
-          onMouseOver={() => setHighlighted(index)}
-          onMouseOut={() => setHighlighted(null)}
+          onMouseOver={() => {
+            if (mouseStart === null) {
+              setHighlighted(index);
+            }
+          }}
+          onMouseOut={() => {
+            if (mouseStart === null) {
+              setHighlighted(null);
+            }
+          }}
           style={{
-            marginLeft: `${obj.x * scale - scale / 2}px`,
-            bottom: `${obj.y * scale + 5}px`,
+            marginLeft: `${obj.translation().x * scale - scale / 2}px`,
+            bottom: `${obj.translation().y * scale + 5}px`,
             width: scale,
             height: scale,
             borderRadius: "50%",
