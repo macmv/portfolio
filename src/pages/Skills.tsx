@@ -18,7 +18,10 @@ export const Skills = () => {
               <tr>
                 <td class="category">Languages</td>
                 <td>
-                  Rust, C/C++, Java/Scala, Python, Go, Ruby, Bash,
+                  <a href="https://www.rust-lang.org/" target="_blank">
+                    Rust
+                  </a>
+                  , C/C++, Java/Scala, Python, Go, Ruby, Bash,
                   Typescript/Javascript
                 </td>
               </tr>

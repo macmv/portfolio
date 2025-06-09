@@ -6,7 +6,12 @@ export const Home = () => {
     <div class="home">
       <Terrain />
       <h1>Neil Macneale</h1>
-      <h2>Full Stack Developer and Student</h2>
+      <h2>
+        <a href="https://github.com/macmv" target="_blank">
+          Full Stack Developer
+        </a>{" "}
+        and Student
+      </h2>
     </div>
   );
 };

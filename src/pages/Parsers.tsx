@@ -23,10 +23,16 @@ export const Parsers = () => {
         >
           <CodeInput code={code} setCode={setCode} highlight={highlight} />
           <p style={{ maxWidth: "400px" }}>
-            This is a simple recursive descent parser, that builds a parse tree
-            for a mathmatical expression. Each operation is represented as a
-            node with two children, and each value in the expression is a leaf
-            node in the tree.
+            This is a simple{" "}
+            <a
+              href="https://en.wikipedia.org/wiki/Recursive_descent_parser"
+              target="_blank"
+            >
+              recursive descent parser
+            </a>
+            , that builds a parse tree for a mathmatical expression. Each
+            operation is represented as a node with two children, and each value
+            in the expression is a leaf node in the tree.
           </p>
         </div>
         <div style={{ flex: "1" }}>
