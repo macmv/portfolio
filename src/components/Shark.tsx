@@ -46,7 +46,15 @@ export const Shark = () => {
           setSharks((s) => [{ x: 0, offset: Math.random() }, ...s]);
         }}
       >
-        Shark!
+        <img
+          src={tigershark}
+          alt="Shark"
+          width="100"
+          style={{
+            marginTop: "-20px",
+            marginBottom: "-20px",
+          }}
+        />
       </span>
       {sharks.map((s) => {
         const t = s.x / 100 + s.offset * 2 * Math.PI;
