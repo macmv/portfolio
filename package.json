@@ -10,11 +10,9 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@dimforge/rapier2d": "^0.17.3",
-    "preact": "^10.26.4"
+    "@dimforge/rapier2d": "^0.17.3"
   },
   "devDependencies": {
-    "@preact/preset-vite": "^2.10.1",
     "typescript": "~5.7.2",
     "vite": "^6.3.1",
     "vite-plugin-wasm": "^3.4.1"
