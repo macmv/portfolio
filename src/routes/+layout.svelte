@@ -5,7 +5,7 @@
   const { children } = $props();
 </script>
 
-<main style="width: 100%">
+<div style="width: 100%">
   <div class="header">
     <Link href="/">Home</Link>
     <Link href="/parsers">Parsers</Link>
@@ -14,7 +14,7 @@
     <Link href="/contact">Contact</Link>
   </div>
   {@render children()}
-</main>
+</div>
 
 <style>
   .header {
