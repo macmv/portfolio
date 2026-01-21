@@ -55,10 +55,7 @@
           </span>
         </div>
       {/if}
-      <input
-        value={code}
-        oninput={(e) => (code = (e.target as HTMLInputElement).value)}
-      />
+      <input bind:value={code} />
       <p class="max-w-[400px]">
         This is a simple recursive descent parser, that builds a parse tree for
         a mathmatical expression. Each operation is represented as a node with
