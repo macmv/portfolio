@@ -41,8 +41,8 @@
 
 <main>
   <Banner>Parsers</Banner>
-  <div class="mx-auto flex w-full max-w-4xl flex-row place-content-center">
-    <div class="flex-1 flex flex-col gap-4">
+  <div class="mx-auto flex place-content-around">
+    <div class="flex flex-col gap-4">
       {#if highlight}
         <div class="highlight">
           <span class="highlight-spacer">
@@ -64,7 +64,7 @@
         tree.
       </p>
     </div>
-    <div class="flex-1 parse-tree h-min text-xl" bind:this={tree_element}></div>
+    <div class="parse-tree h-min text-xl" bind:this={tree_element}></div>
   </div>
 </main>
 
