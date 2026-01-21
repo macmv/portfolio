@@ -1,18 +1,41 @@
 <script lang="ts">
   import Banner from "$lib/banner.svelte";
+  import { onMount } from "svelte";
   import init, { parse } from "../../../render/pkg";
-  import { type Tree, renderTree } from "./tree";
+  import { renderTree } from "./tree";
 
   let code = $state("1 + 2 * 3 + 4");
-  let highlight = $state([2, 4]);
-  let tree = $state<Tree | null>(null);
+  let highlight = $state<[number, number] | null>(null);
+  let nodes = $state<{ element: HTMLElement; range: [number, number] }[]>([]);
   let tree_element: Element;
 
+  let setup = $state<boolean>(false);
+
+  onMount(() => {
+    init().then(() => (setup = true));
+  });
+
   $effect(() => {
-    init().then(() => {
-      tree = parse(code);
-      renderTree(tree, tree_element);
-    });
+    if (setup) {
+      const tree = parse(code);
+      nodes = renderTree(tree, tree_element, (h) => {
+        highlight = h;
+      });
+    }
+  });
+
+  $effect(() => {
+    for (const node of nodes) {
+      if (
+        highlight !== null &&
+        node.range[0] >= highlight[0] &&
+        node.range[1] <= highlight[1]
+      ) {
+        node.element.classList.add("hover");
+      } else {
+        node.element.classList.remove("hover");
+      }
+    }
   });
 </script>
 
@@ -138,6 +161,20 @@
     transform: translateY(-2px);
   }
 
+  :global(.parse-tree .operator.hover ~ .line) {
+    background-color: var(--green);
+
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
+    translate: 0 -2px;
+  }
+
+  :global(.parse-tree .line:has(~ .operator.hover)) {
+    background-color: var(--green);
+
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
+    translate: 0 -2px;
+  }
+
   :global(.parse-tree .binary) {
     display: flex;
     flex-direction: row;
@@ -156,11 +193,5 @@
     transform-origin: top;
 
     transition: all 100ms;
-  }
-
-  :global(.parse-tree .line.hover) {
-    background-color: var(--green);
-
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
   }
 </style>

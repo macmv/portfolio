@@ -21,48 +21,42 @@ const width = 50;
 const height = 50;
 const gap = 30;
 
-const createLine = (
-  x: number,
-  y: number,
-  angle: number,
-  length: number,
-  hover: boolean,
-) => {
+const createLine = (x: number, y: number, angle: number, length: number) => {
   const elem = document.createElement("span");
 
   elem.classList.add("line");
-  if (hover) {
-    elem.classList.add("hover");
-  }
 
   elem.style.marginLeft = `${x}px`;
   elem.style.marginTop = `${y}px`;
-  elem.style.transform = `${hover ? "translateY(-2px) " : ""}rotate(${angle}rad)`;
+  elem.style.transform = `rotate(${angle}rad)`;
   elem.style.height = `${length}px`;
 
   return elem;
 };
 
-const createLiteralNode = (text: string, hover: boolean) => {
+const createLiteralNode = (text: string) => {
   const elem = document.createElement("span");
 
   elem.classList.add("node");
-  if (hover) {
-    elem.classList.add("hover");
-  }
 
   elem.innerText = text;
 
   return elem;
 };
 
-export const renderTree = (tree: Tree, root: Element) => {
-  const renderNode = (idx: number, hover: boolean) => {
+export const renderTree = (
+  tree: Tree,
+  root: Element,
+  onHover: (highlight: [number, number] | null) => void,
+) => {
+  let nodes = [];
+
+  const renderNode = (idx: number) => {
     const node = tree[idx];
 
     if (node.type === "binary") {
-      const left = renderNode(node.left, hover);
-      const right = renderNode(node.right, hover);
+      const left = renderNode(node.left);
+      const right = renderNode(node.right);
 
       const leftX = left.x;
       const rightX = left.width + width + right.x;
@@ -77,30 +71,42 @@ export const renderTree = (tree: Tree, root: Element) => {
 
       left.element.classList.add("child");
       elem.appendChild(left.element);
-      elem.appendChild(createLine(x, height / 2, angle, length, hover));
-      const op = createLiteralNode(node.operator, hover);
+      elem.appendChild(createLine(x, height / 2, angle, length));
+      const op = createLiteralNode(node.operator);
+      op.classList.add("operator");
       op.style.marginLeft = `${offset}px`;
       op.style.marginRight = `${-offset}px`;
+      op.onmouseover = () => onHover([node.start, node.end]);
+      op.onmouseout = () => onHover(null);
+      nodes.push({ element: op, range: [node.start, node.end] });
       elem.appendChild(op);
-      elem.appendChild(createLine(x, height / 2, -angle, length, hover));
+      elem.appendChild(createLine(x, height / 2, -angle, length));
       right.element.classList.add("child");
       elem.appendChild(right.element);
 
       return {
+        element: elem,
         x,
         width: left.width + right.width + width,
-        element: elem,
       };
     } else if (node.type === "literal") {
-      return {
-        element: createLiteralNode(node.value, hover),
+      const elem = createLiteralNode(node.value);
+      elem.onmouseover = () => onHover([node.start, node.end]);
+      elem.onmouseout = () => onHover(null);
+      const n = {
+        element: elem,
+        range: [node.start, node.end],
         x: width / 2,
         width: width,
       };
+      nodes.push(n);
+      return n;
     } else {
       return { element: null, x: 0, width: 0 };
     }
   };
 
-  root.replaceChildren(renderNode(tree.length - 1, false).element);
+  root.replaceChildren(renderNode(tree.length - 1).element);
+
+  return nodes;
 };
