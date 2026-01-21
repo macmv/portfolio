@@ -10,3 +10,23 @@
 
   --text: var(--gray);
 }
+
+* {
+  font-family: Nunito, sans-serif;
+  box-sizing: border-box;
+}
+
+*::selection {
+  text-shadow: none;
+  color: #fff;
+  background-color: var(--text);
+}
+
+body {
+  background-color: #f0f0f0;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
