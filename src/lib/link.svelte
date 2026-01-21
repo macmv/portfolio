@@ -3,7 +3,7 @@
 </script>
 
 <a class="link-wrapper" {href}>
-  <div class="link-content">
+  <div class="link-content text-2xl">
     {@render children()}
   </div>
 </a>
