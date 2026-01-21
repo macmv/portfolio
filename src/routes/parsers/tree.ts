@@ -51,6 +51,15 @@ export const renderTree = (
 ) => {
   let nodes = [];
 
+  if (typeof tree === "string") {
+    const err = document.createElement("span");
+    err.classList.add("error");
+    err.innerText = `Parse error: ${tree}`;
+
+    root.replaceChildren(err);
+    return [];
+  }
+
   const renderNode = (idx: number) => {
     const node = tree[idx];
 

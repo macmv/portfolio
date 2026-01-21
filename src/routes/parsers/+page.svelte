@@ -64,7 +64,7 @@
         tree.
       </p>
     </div>
-    <div class="flex-1 parse-tree" bind:this={tree_element}></div>
+    <div class="flex-1 parse-tree h-min text-xl" bind:this={tree_element}></div>
   </div>
 </main>
 
@@ -193,5 +193,22 @@
     transform-origin: top;
 
     transition: all 100ms;
+  }
+
+  :global(.parse-tree .error) {
+    position: relative;
+
+    font-weight: bold;
+  }
+
+  :global(.parse-tree .error::after) {
+    content: "";
+    position: absolute;
+    left: 0px;
+    right: 0px;
+    bottom: -8px;
+    height: 4px;
+    background-color: var(--red);
+    border-radius: 2px;
   }
 </style>
