@@ -10,7 +10,10 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@dimforge/rapier2d": "^0.17.3"
+    "@dimforge/rapier2d": "^0.17.3",
+    "@myriaddreamin/typst-ts-renderer": "0.7.0-rc2",
+    "@myriaddreamin/typst-ts-web-compiler": "0.7.0-rc2",
+    "@myriaddreamin/typst.ts": "0.7.0-rc2"
   },
   "devDependencies": {
     "@sveltejs/adapter-auto": "^7.0.0",
