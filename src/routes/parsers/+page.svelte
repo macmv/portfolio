@@ -2,12 +2,23 @@
   import Banner from "$lib/banner.svelte";
 
   let code = $state("");
+  let highlight = $state([2, 4]);
 </script>
 
 <main>
   <Banner>Parsers</Banner>
   <div class="mx-auto flex w-full max-w-4xl flex-row place-content-center">
     <div class="flex-1 flex flex-col gap-4">
+      {#if highlight}
+        <div class="highlight">
+          <span class="highlight-spacer">
+            {"\u00a0".repeat(highlight[0])}
+          </span>
+          <span class="highlight-underline">
+            {"\u00a0".repeat(highlight[1] - highlight[0])}
+          </span>
+        </div>
+      {/if}
       <input value={code} oninput={(e) => (code = e.target.value)} />
       <p class="max-w-[400px]">
         This is a simple recursive descent parser, that builds a parse tree for
@@ -54,11 +65,11 @@
     font-size: 32px;
   }
 
-  .highlight > .underline {
+  .highlight-underline {
     position: relative;
   }
 
-  .highlight > .underline::after {
+  .highlight-underline::after {
     box-sizing: border-box;
     content: "";
     position: absolute;
