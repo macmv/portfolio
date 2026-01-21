@@ -1,1 +1,12 @@
 @import "tailwindcss";
+
+:root {
+  --gray: #333;
+  --light-gray: #888;
+
+  --blue: #238;
+  --light-blue: #67e;
+  --green: #5a4;
+
+  --text: var(--gray);
+}
