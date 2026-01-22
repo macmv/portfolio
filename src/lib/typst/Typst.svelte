@@ -21,7 +21,7 @@
     if (res.status == 200) {
       const render = await typst.getRenderer();
 
-      render.runWithSession(
+      await render.runWithSession(
         {
           artifactContent: new Uint8Array(await res.arrayBuffer()),
           format: "vector",
@@ -31,14 +31,12 @@
             renderSession: session,
           });
 
-          if (container) {
-            container.innerHTML = svg;
+          container.innerHTML = svg;
 
-            const el = container.querySelector("svg");
-            if (el) {
-              el.setAttribute("width", "calc(min(80%, 1200px))");
-              el.setAttribute("height", "0%");
-            }
+          const el = container.querySelector("svg");
+          if (el) {
+            el.setAttribute("width", "calc(min(80%, 1200px))");
+            el.setAttribute("height", "0%");
           }
         },
       );
