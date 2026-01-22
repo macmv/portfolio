@@ -7,11 +7,11 @@ export const GET: RequestHandler = async ({ params }) => {
     throw error(404, "Missing typst path.");
   }
   const res = await compileTypc(`${params.path}.typ`);
-  if (res.typc) {
-    return new Response(res.typc, {
+  if (res.html) {
+    return new Response(res.html, {
       status: 200,
       headers: {
-        "content-type": "application/octet-stream",
+        "content-type": "text/plain",
         "cache-control": "no-store",
       },
     });

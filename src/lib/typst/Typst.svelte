@@ -19,33 +19,11 @@
     });
 
     if (res.status == 200) {
-      const render = await typst.getRenderer();
-
-      await render.runWithSession(
-        {
-          artifactContent: new Uint8Array(await res.arrayBuffer()),
-          format: "vector",
-        },
-        async (session) => {
-          await render.renderToCanvas({
-            renderSession: session,
-            container: container,
-            backgroundColor: "#eeeeee",
-          });
-
-          const el = container.querySelector("svg");
-          if (el) {
-            el.setAttribute("width", "calc(min(80%, 1200px))");
-            el.setAttribute("height", "0%");
-          }
-        },
-      );
+      container.innerHTML = await res.text();
     } else {
-      if (container) {
-        const errors: string = await res.json();
+      const errors: string = await res.json();
 
-        container.innerHTML = errors;
-      }
+      container.innerHTML = `<pre>${errors}</pre>`;
     }
   };
 
@@ -60,10 +38,30 @@
   });
 </script>
 
-<div bind:this={container}></div>
+<div class="typst" bind:this={container}></div>
 
 <style>
   div {
-    margin-top: 40pt;
+    margin: 40pt 20%;
+    display: flex;
+    justify-content: center;
+  }
+
+  .typst :global(*) {
+    font-family: "Liberation Serif";
+  }
+
+  .typst :global(pre *) {
+    font-family: "Liberation Mono";
+  }
+
+  .typst :global(h1) {
+    font-size: 32pt;
+  }
+  .typst :global(h2) {
+    font-size: 24pt;
+  }
+  .typst :global(h3) {
+    font-size: 20pt;
   }
 </style>

@@ -17,7 +17,7 @@ function resolveTypstPath(relativePath: string): string {
 
 export async function compileTypc(
   relativePath: string,
-): Promise<{ typc?: Uint8Array; error?: string }> {
+): Promise<{ html?: string; error?: string }> {
   const absPath = resolveTypstPath(relativePath);
   if (!fs.existsSync(absPath)) {
     throw new Error(`Missing Typst file: ${absPath}`);
@@ -25,7 +25,7 @@ export async function compileTypc(
 
   compiler.evictCache(30); // we're a watch server
 
-  const result = compiler.compile({
+  const result = compiler.compileHtml({
     mainFilePath: absPath,
   });
 
@@ -38,5 +38,5 @@ export async function compileTypc(
     };
   }
 
-  return { typc: compiler.vector(result.result) };
+  return { html: compiler.tryHtml(result.result).result!.body() };
 }
