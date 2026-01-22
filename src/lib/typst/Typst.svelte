@@ -14,17 +14,24 @@
       g.__typst_inited = true;
     }
 
-    const svg = await typst.svg({
-      vectorData: new Uint8Array(
-        await (
-          await fetch(`/typst/${source.replace(".typ", ".typc")}`, {
-            cache: "no-store",
-          })
-        ).arrayBuffer(),
-      ),
+    const res = await fetch(`/typst/${source.replace(".typ", ".typc")}`, {
+      cache: "no-store",
     });
-    if (container) {
-      container.innerHTML = svg;
+
+    if (res.status == 200) {
+      const svg = await typst.svg({
+        vectorData: new Uint8Array(await res.arrayBuffer()),
+      });
+
+      if (container) {
+        container.innerHTML = svg;
+      }
+    } else {
+      if (container) {
+        const errors: string = await res.json();
+
+        container.innerHTML = errors;
+      }
     }
   };
 

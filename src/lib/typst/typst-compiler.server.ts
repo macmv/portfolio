@@ -15,13 +15,9 @@ function resolveTypstPath(relativePath: string): string {
   return target;
 }
 
-function formatDiagnostics(diags: any[]): string {
-  return diags
-    .map((d) => `${d.path ?? "unknown"}: ${d.message ?? "unknown error"}`)
-    .join("\n");
-}
-
-export async function compileTypc(relativePath: string): Promise<Uint8Array> {
+export async function compileTypc(
+  relativePath: string,
+): Promise<{ typc?: Uint8Array; error?: string }> {
   const absPath = resolveTypstPath(relativePath);
   if (!fs.existsSync(absPath)) {
     throw new Error(`Missing Typst file: ${absPath}`);
@@ -33,8 +29,12 @@ export async function compileTypc(relativePath: string): Promise<Uint8Array> {
 
   if (!result.result) {
     const diagnostics = compiler.fetchDiagnostics(result.takeDiagnostics());
-    throw new Error(formatDiagnostics(diagnostics));
+    return {
+      error: diagnostics
+        .map((d) => `${d.path ?? "unknown"}: ${d.message ?? "unknown error"}`)
+        .join("\n"),
+    };
   }
 
-  return compiler.vector(result.result);
+  return { typc: compiler.vector(result.result) };
 }
