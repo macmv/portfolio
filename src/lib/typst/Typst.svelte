@@ -27,11 +27,11 @@
           format: "vector",
         },
         async (session) => {
-          const svg = await render.renderSvg({
+          await render.renderToCanvas({
             renderSession: session,
+            container: container,
+            backgroundColor: "#eeeeee",
           });
-
-          container.innerHTML = svg;
 
           const el = container.querySelector("svg");
           if (el) {
@@ -64,7 +64,6 @@
 
 <style>
   div {
-    display: flex;
-    justify-content: center;
+    margin-top: 40pt;
   }
 </style>
