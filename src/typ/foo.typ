@@ -1,9 +1,28 @@
+#import "@preview/cetz:0.4.2"
+
 = Hello
 
 foobar
 
-This equation: $F_3(x) = 5$
+Here's some sample setup code:
 
-```rs
-let a = 3;
+```c
+const int ledPin = 13;
+const int switchPin = 12;
+
+void setup() {
+  pinMode(ledPin, OUTPUT);
+
+  pinMode(switchPin, INPUT);
+  digitalWrite(switchPin, HIGH);
+}
+
+void loop() {
+  digitalWrite(ledPin, HIGH);
+  delay(1000);
+  digitalWrite(ledPin, LOW);
+  delay(1000);
+}
 ```
+
+#lorem(1000)
