@@ -23,6 +23,8 @@ export async function compileTypc(
     throw new Error(`Missing Typst file: ${absPath}`);
   }
 
+  compiler.evictCache(30); // we're a watch server
+
   const result = compiler.compile({
     mainFilePath: absPath,
   });
