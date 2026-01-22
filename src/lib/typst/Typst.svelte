@@ -19,13 +19,29 @@
     });
 
     if (res.status == 200) {
-      const svg = await typst.svg({
-        vectorData: new Uint8Array(await res.arrayBuffer()),
-      });
+      const render = await typst.getRenderer();
 
-      if (container) {
-        container.innerHTML = svg;
-      }
+      render.runWithSession(
+        {
+          artifactContent: new Uint8Array(await res.arrayBuffer()),
+          format: "vector",
+        },
+        async (session) => {
+          const svg = await render.renderSvg({
+            renderSession: session,
+          });
+
+          if (container) {
+            container.innerHTML = svg;
+
+            const el = container.querySelector("svg");
+            if (el) {
+              el.setAttribute("width", "100%");
+              el.setAttribute("height", "0%");
+            }
+          }
+        },
+      );
     } else {
       if (container) {
         const errors: string = await res.json();
