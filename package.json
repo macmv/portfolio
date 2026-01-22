@@ -12,10 +12,10 @@
   "dependencies": {
     "@dimforge/rapier2d": "^0.17.3",
     "@myriaddreamin/typst-ts-renderer": "0.7.0-rc2",
-    "@myriaddreamin/typst-ts-web-compiler": "0.7.0-rc2",
     "@myriaddreamin/typst.ts": "0.7.0-rc2"
   },
   "devDependencies": {
+    "@myriaddreamin/typst-ts-node-compiler": "0.7.0-rc2",
     "@sveltejs/adapter-auto": "^7.0.0",
     "@sveltejs/kit": "^2.50.0",
     "@sveltejs/vite-plugin-svelte": "^6.2.4",
