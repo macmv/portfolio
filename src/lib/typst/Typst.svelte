@@ -36,7 +36,7 @@
 
             const el = container.querySelector("svg");
             if (el) {
-              el.setAttribute("width", "100%");
+              el.setAttribute("width", "calc(min(80%, 1200px))");
               el.setAttribute("height", "0%");
             }
           }
@@ -63,3 +63,10 @@
 </script>
 
 <div bind:this={container}></div>
+
+<style>
+  div {
+    display: flex;
+    justify-content: center;
+  }
+</style>
