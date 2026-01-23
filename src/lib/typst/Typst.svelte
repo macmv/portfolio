@@ -11,6 +11,22 @@
 
     if (res.status == 200) {
       container.innerHTML = await res.text();
+
+      for (const pre of container.querySelectorAll("pre > code")) {
+        let lines = [];
+        let line = document.createElement("span");
+        line.classList.add("line");
+        for (const child of Array.from(pre.childNodes)) {
+          line.appendChild(child);
+          if (child.nodeName === "BR") {
+            lines.push(line);
+            line = document.createElement("span");
+            line.classList.add("line");
+          }
+        }
+        lines.push(line);
+        pre.replaceChildren(...lines);
+      }
     } else {
       const errors: string = await res.json();
 
@@ -44,6 +60,24 @@
 
   .typst :global(pre *) {
     font-family: "Liberation Mono";
+  }
+
+  .typst :global(pre) {
+    margin: 1em;
+  }
+  .typst :global(pre .line) {
+    counter-increment: line;
+    display: block;
+  }
+  .typst :global(pre .line::before) {
+    content: counter(line);
+    display: inline-block;
+    text-align: right;
+    width: 3ch;
+    padding-right: 0.5em;
+    color: #333;
+    border-right: 1px solid #aaa;
+    margin-right: 0.5em;
   }
 
   .typst :global(h1) {
