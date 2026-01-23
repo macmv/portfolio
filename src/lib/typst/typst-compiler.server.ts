@@ -29,6 +29,13 @@ export async function compileTypc(
     mainFilePath: absPath,
   });
 
+  const warnings = result.takeWarnings();
+  if (warnings) {
+    for (const warn of warnings.shortDiagnostics) {
+      console.warn(warn);
+    }
+  }
+
   if (!result.result) {
     const diagnostics = compiler.fetchDiagnostics(result.takeDiagnostics());
     return {
