@@ -1,8 +1,11 @@
 #import "@preview/cetz:0.4.2"
 
+#show math.equation: html.frame
+#show math.equation.where(block: false): box
+
 = Hello
 
-foobar
+foobar $F_1 (x) = 0$.
 
 Here's some sample setup code:
 
