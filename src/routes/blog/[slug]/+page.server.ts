@@ -1,10 +1,8 @@
-import { dev } from "$app/environment";
 import { compileTypc } from "$lib/typst/typst-compiler.server";
 import type { PageServerLoad } from "./$types";
 import fs from "node:fs/promises";
 import path from "node:path";
 
-export const csr = dev;
 export const prerender = true;
 
 export const entries = async () => {
