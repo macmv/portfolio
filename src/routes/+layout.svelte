@@ -9,7 +9,7 @@
   <div class="header">
     <Link href="/">Home</Link>
     <Link href="/parsers">Parsers</Link>
-    <Link href="/skills">Skills</Link>
+    <Link href="/blog">Blog</Link>
     <Link href="/sharks">Sharks!</Link>
   </div>
   {@render children()}
