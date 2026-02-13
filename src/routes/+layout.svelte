@@ -11,7 +11,6 @@
     <Link href="/parsers">Parsers</Link>
     <Link href="/skills">Skills</Link>
     <Link href="/sharks">Sharks!</Link>
-    <Link href="/contact">Contact</Link>
   </div>
   {@render children()}
 </div>
