@@ -25,4 +25,14 @@
     column-gap: 20px;
     padding: 10px 20px;
   }
+
+  :global(a) {
+    color: var(--light-blue);
+    text-decoration: none;
+  }
+
+  :global(a:hover) {
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+  }
 </style>
