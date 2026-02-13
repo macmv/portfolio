@@ -1,22 +1,31 @@
 import { dev } from "$app/environment";
 import { compileTypc } from "$lib/typst/typst-compiler.server";
+import type { PageServerLoad } from "./$types";
+import fs from "node:fs/promises";
+import path from "node:path";
 
 export const csr = dev;
-export const load = async ({
-  params,
-}: {
-  params: Record<string, string | undefined>;
-}) => {
-  const value = params["slug"];
-  if (!value) {
+export const prerender = true;
+
+export const entries = async () => {
+  const dir = path.resolve("src/typ");
+  const files = await fs.readdir(dir, { withFileTypes: true });
+  return files
+    .filter((d) => d.isFile() && d.name.endsWith(".typ"))
+    .map((d) => ({ slug: d.name.slice(0, -".typ".length) }));
+};
+
+export const load: PageServerLoad = async ({ params }) => {
+  const slug = params.slug;
+  if (!slug) {
     return {
-      typstHtml: "",
-      typstError: `Missing route param`,
-      typstSource: "",
+      html: "",
+      error: "Missing route param: slug",
+      source: "",
     };
   }
 
-  const relativePath = `${value}.typ`;
+  const relativePath = `${slug}.typ`;
   const res = await compileTypc(relativePath);
   return {
     html: res.html ?? "",
