@@ -8,40 +8,17 @@
 
   let container: HTMLElement;
 
-  const postProcess = () => {
-    for (const pre of container.querySelectorAll("pre > code")) {
-      let lines = [];
-      let line = document.createElement("span");
-      line.classList.add("line");
-      for (const child of Array.from(pre.childNodes)) {
-        line.appendChild(child);
-        if (child.nodeName === "BR") {
-          lines.push(line);
-          line = document.createElement("span");
-          line.classList.add("line");
-        }
-      }
-      lines.push(line);
-      pre.replaceChildren(...lines);
-    }
-  };
-
-  const renderHtml = (markup: string) => {
-    container.innerHTML = markup;
-    postProcess();
-  };
-
   const render = async () => {
     const res = await fetch(`/typst/${data.source.replace(".typ", ".typc")}`, {
       cache: "no-store",
     });
 
     if (res.status == 200) {
-      renderHtml(await res.text());
+      container.innerHTML = await res.text();
     } else {
       const errors: string = await res.json();
 
-      renderHtml(`<pre>${errors}</pre>`);
+      container.innerHTML = `<pre>${errors}</pre>`;
     }
   };
 
