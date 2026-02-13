@@ -14,7 +14,7 @@
   },
   "devDependencies": {
     "@myriaddreamin/typst-ts-node-compiler": "0.7.0-rc2",
-    "@sveltejs/adapter-auto": "^7.0.1",
+    "@sveltejs/adapter-cloudflare": "^7.2.7",
     "@sveltejs/kit": "^2.51.0",
     "@sveltejs/vite-plugin-svelte": "^6.2.4",
     "@tailwindcss/vite": "^4.1.18",
