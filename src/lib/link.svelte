@@ -41,6 +41,6 @@
   .link-wrapper:hover > .link-content::after {
     border-left-width: 2px;
     border-right-width: 2px;
-    width: 100%;
+    width: calc(100% + 4px);
   }
 </style>
