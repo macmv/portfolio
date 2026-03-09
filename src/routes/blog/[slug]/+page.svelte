@@ -56,7 +56,7 @@
   }
 
   .typst :global(pre *) {
-    font-family: "Liberation Mono";
+    font-family: "Liberation Mono", monospace;
   }
 
   .typst :global(pre) {
