@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { page } from "$app/state";
   import Link from "$lib/link.svelte";
   import "../app.css";
 
@@ -6,7 +7,7 @@
 </script>
 
 <div style="width: 100%">
-  <div class="header">
+  <div class={"header" + (page.url.pathname == "/" ? " header-fixed" : "")}>
     <Link href="/">Home</Link>
     <Link href="/parsers">Parsers</Link>
     <Link href="/blog/foo">Blog</Link>
@@ -17,13 +18,16 @@
 
 <style>
   .header {
-    position: fixed;
     width: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
     column-gap: 20px;
     padding: 10px 20px;
+  }
+
+  .header-fixed {
+    position: fixed;
   }
 
   :global(a) {

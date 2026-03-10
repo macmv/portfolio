@@ -6,7 +6,6 @@
 
 <style>
   h1 {
-    padding-top: 50px;
     height: 300px;
     background: #0000;
     font-weight: bold;

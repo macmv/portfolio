@@ -46,7 +46,7 @@
 
 <style>
   div {
-    margin: 40pt 20%;
+    margin: 20pt 20%;
     display: flex;
     justify-content: center;
   }
