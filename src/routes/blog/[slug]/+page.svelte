@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import init, { setup, tick, points, Point } from "../../../../fluid/pkg";
+  import init, { Sim, Point } from "../../../../fluid/pkg";
   import * as d3 from "d3";
   const dev = import.meta.env.DEV;
 
@@ -39,6 +39,7 @@
 
   let chart;
   let svg;
+  let sim;
 
   const width = 500;
   const height = 400;
@@ -85,7 +86,7 @@
       .append("rect")
       .attr("width", width)
       .attr("height", height)
-      .attr("fill", "#fff")
+      .attr("fill", "transparent")
       .style("pointer-events", "all")
       .call(drag);
 
@@ -121,12 +122,15 @@
   onMount(() => {
     let animated = true;
     init().then(() => {
-      setup();
-      renderChart(points());
+      sim = new Sim();
+      renderChart(sim.points());
 
       const frame = () => {
-        tick(clicked, pointer_x, pointer_y);
-        renderChart(points());
+        if (clicked) {
+          sim.apply_repulsion(pointer_x, pointer_y, 1.5, 3000);
+        }
+        sim.tick();
+        renderChart(sim.points());
         if (animated) {
           requestAnimationFrame(frame);
         }
