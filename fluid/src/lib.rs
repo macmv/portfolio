@@ -13,6 +13,18 @@ pub struct Point {
 }
 
 #[wasm_bindgen]
+pub fn kernel_poly6(distance: f32, radius: f32) -> f32 { fl_sim::kernel_poly6(distance, radius) }
+#[wasm_bindgen]
+pub fn kernel_spiky_gradient(displacement: Point, radius: f32) -> Point {
+  let p = fl_sim::kernel_spiky_gradient(nalgebra::vector![displacement.x, displacement.y], radius);
+  Point { x: p.x, y: p.y }
+}
+#[wasm_bindgen]
+pub fn tensile_correction(distance: f32, radius: f32) -> f32 {
+  fl_sim::tensile_correction(distance, radius)
+}
+
+#[wasm_bindgen]
 impl Sim {
   #[wasm_bindgen(constructor)]
   pub fn new(descent: bool, tensile: bool) -> Self {
