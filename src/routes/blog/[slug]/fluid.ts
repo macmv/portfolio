@@ -92,6 +92,10 @@ export const buildFluid = (
   parent: HTMLElement,
   { features }: { features: Features },
 ) => {
+  if (parent == null) {
+    return;
+  }
+
   const svg = d3.create("svg").attr("width", width).attr("height", height);
 
   const sim = new Simulation(svg, features);
