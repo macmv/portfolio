@@ -3,6 +3,7 @@
   import init, {
     kernel_poly6,
     kernel_spiky_gradient,
+    tensile_correction,
   } from "../../../../fluid/pkg";
   import { buildFluid, draw2dGraph, drawGradientGraph } from "./fluid";
   const dev = import.meta.env.DEV;
@@ -50,6 +51,24 @@
         },
       }),
     );
+    sims.push(
+      buildFluid(document.getElementById("simulation-no-tensile"), {
+        features: {
+          descent: true,
+          naive_lambda: false,
+          no_tensile: true,
+        },
+      }),
+    );
+    sims.push(
+      buildFluid(document.getElementById("simulation-with-tensile"), {
+        features: {
+          descent: true,
+          naive_lambda: false,
+          no_tensile: false,
+        },
+      }),
+    );
 
     draw2dGraph(
       document.getElementById("graph-poly6"),
@@ -67,6 +86,14 @@
       [0, 10],
       "Gradient",
       (x) => Math.abs(kernel_spiky_gradient(x, 0, 1).x),
+    );
+    draw2dGraph(
+      document.getElementById("graph-tensile"),
+      [-1, 1],
+      "Distance",
+      [-0.05, 0],
+      "Tensile Correction",
+      (x) => tensile_correction(x, 1),
     );
   };
 
