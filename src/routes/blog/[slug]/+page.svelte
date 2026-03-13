@@ -86,4 +86,14 @@
   .typst :global(h3) {
     font-size: 20pt;
   }
+
+  .typst :global(p) {
+    text-align: justify;
+    text-indent: 2em;
+  }
+
+  .typst :global(ul) {
+    padding-left: 2em;
+    list-style-type: disc;
+  }
 </style>
