@@ -2,6 +2,7 @@
   import { onMount } from "svelte";
   import init, { Sim, Point } from "../../../../fluid/pkg";
   import * as d3 from "d3";
+  import { buildFluid } from "./fluid";
   const dev = import.meta.env.DEV;
 
   const { data } = $props<{
@@ -37,113 +38,24 @@
     });
   }
 
-  let chart;
-  let svg;
-  let sim;
-
-  const width = 500;
-  const height = 400;
-  const marginTop = 20;
-  const marginRight = 20;
-  const marginBottom = 30;
-  const marginLeft = 40;
-
-  const x = d3
-    .scaleLinear()
-    .domain([0, 8])
-    .range([marginLeft, width - marginRight]);
-
-  const y = d3
-    .scaleLinear()
-    .domain([0, 8])
-    .range([height - marginBottom, marginTop]);
-
-  let clicked = false;
-  let pointer_x = 0;
-  let pointer_y = 0;
+  let sims = [];
 
   onMount(() => {
-    svg = d3.create("svg").attr("width", width).attr("height", height);
-
-    const drag = d3
-      .drag()
-      .on("start", (e) => {
-        const [px, py] = d3.pointer(e, svg.node());
-        clicked = true;
-        pointer_x = x.invert(px);
-        pointer_y = y.invert(py);
-      })
-      .on("drag", (e) => {
-        const [px, py] = d3.pointer(e, svg.node());
-        pointer_x = x.invert(px);
-        pointer_y = y.invert(py);
-      })
-      .on("end", (e) => {
-        clicked = false;
-      });
-
-    svg
-      .append("rect")
-      .attr("width", width)
-      .attr("height", height)
-      .attr("fill", "transparent")
-      .style("pointer-events", "all")
-      .call(drag);
-
-    // Add the x-axis.
-    svg
-      .append("g")
-      .attr("transform", `translate(0,${height - marginBottom})`)
-      .call(d3.axisBottom(x));
-
-    // Add the y-axis.
-    svg
-      .append("g")
-      .attr("transform", `translate(${marginLeft},0)`)
-      .call(d3.axisLeft(y));
-
-    // Add a circle for each point
-    renderChart([]);
-
-    chart.appendChild(svg.node());
-  });
-
-  const renderChart = (points: Point[]) => {
-    svg
-      .selectAll("circle")
-      .data(points.map((p, i) => ({ id: i, x: p.x, y: p.y })))
-      .join("circle")
-      .attr("cx", (d) => x(d.x))
-      .attr("cy", (d) => y(d.y))
-      .attr("r", 4)
-      .style("fill", "#918ccd");
-  };
-
-  onMount(() => {
-    let animated = true;
     init().then(() => {
-      sim = new Sim();
-      renderChart(sim.points());
-
-      const frame = () => {
-        if (clicked) {
-          sim.apply_repulsion(pointer_x, pointer_y, 1.5, 3000);
-        }
-        sim.tick();
-        renderChart(sim.points());
-        if (animated) {
-          requestAnimationFrame(frame);
-        }
-      };
-
-      requestAnimationFrame(frame);
+      sims.push(buildFluid(document.getElementById("simulation-foo")));
+      sims.push(buildFluid(document.getElementById("simulation-bar")));
     });
 
-    () => (animated = false);
+    () => {
+      for (const sim of sims) {
+        sim.stop();
+      }
+    };
   });
 </script>
 
-<div class="chart" bind:this={chart}></div>
+<div id="simulation-foo"></div>
+<div id="simulation-bar"></div>
 
 <div class="typst" bind:this={container}>
   {#if !dev}
