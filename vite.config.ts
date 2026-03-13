@@ -11,7 +11,7 @@ export default defineConfig({
   plugins: [sveltekit(), tailwindcss(), wasm(), typstHmr()],
   server: {
     fs: {
-      allow: ["render/pkg"],
+      allow: ["render/pkg", "fluid/pkg"],
     },
   },
 });

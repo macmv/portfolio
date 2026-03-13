@@ -4,7 +4,9 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "wasm": "wasm-pack build ./render --target web",
+    "wasm": "pnpm wasm-render && pnpm wasm-fluid",
+    "wasm-render": "wasm-pack build ./render --target web",
+    "wasm-fluid": "wasm-pack build ./fluid --target web",
     "dev": "vite",
     "build": "pnpm wasm && tsc -b && vite build",
     "preview": "vite preview"
