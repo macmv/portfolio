@@ -23,8 +23,12 @@ pub fn setup() {
 }
 
 #[wasm_bindgen]
-pub fn tick() {
+pub fn tick(clicked: bool, x: f32, y: f32) {
   if let Some(sim) = unsafe { &mut SIMULATION } {
+    if clicked {
+      sim.apply_repulsion(nalgebra::point![x, y], 1.5, 3000.0);
+    }
+
     sim.tick();
   }
 }
