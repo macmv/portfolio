@@ -1,5 +1,10 @@
 import * as d3 from "d3";
-import init, { Sim, Point, kernel_poly6 } from "../../../../fluid/pkg";
+import init, {
+  Sim,
+  Point,
+  kernel_poly6,
+  kernel_spiky_gradient,
+} from "../../../../fluid/pkg";
 
 const width = 500;
 const height = 400;
@@ -216,6 +221,138 @@ export const drawPoly6Graph = (parent: HTMLElement) => {
     .attr("text-anchor", "middle")
     .attr("fill", "#444")
     .text("Wpoly6");
+
+  parent.appendChild(svg.node());
+};
+
+export const drawGradientGraph = (parent: HTMLElement) => {
+  const width = 400;
+  const height = 400;
+  const marginTop = 20;
+  const marginRight = 20;
+  const marginBottom = 40;
+  const marginLeft = 50;
+
+  const svg = d3.create("svg").attr("width", width).attr("height", height);
+  const sampleCount = 20;
+  const divisor = 50;
+  const points = Array.from({ length: sampleCount + 1 }, (_, ix) =>
+    Array.from({ length: sampleCount + 1 }, (_, iy) => {
+      const px = (ix / sampleCount) * 2 - 1;
+      const py = (iy / sampleCount) * 2 - 1;
+      const grad = kernel_spiky_gradient(px, py, 1.0);
+      const mag = Math.hypot(grad.x, grad.y);
+      if (mag === 0) return [px, py, 0, 0] as const;
+      return [
+        px,
+        py,
+        -((grad.x / mag) * 0.05 + grad.x / divisor),
+        -((grad.y / mag) * 0.05 + grad.y / divisor),
+      ] as const;
+    }),
+  ).flat();
+
+  const x = d3
+    .scaleLinear()
+    .domain([-1, 1])
+    .range([marginLeft, width - marginRight]);
+
+  const y = d3
+    .scaleLinear()
+    .domain([-1, 1])
+    .range([height - marginBottom, marginTop]);
+
+  // Draw faint background grid.
+  const grid = svg
+    .append("g")
+    .attr("stroke", "#000")
+    .attr("stroke-opacity", 0.08);
+
+  grid
+    .selectAll("line.grid-x")
+    .data(x.ticks(10))
+    .join("line")
+    .attr("class", "grid-x")
+    .attr("x1", (d) => x(d))
+    .attr("x2", (d) => x(d))
+    .attr("y1", marginTop)
+    .attr("y2", height - marginBottom);
+
+  grid
+    .selectAll("line.grid-y")
+    .data(y.ticks(10))
+    .join("line")
+    .attr("class", "grid-y")
+    .attr("x1", marginLeft)
+    .attr("x2", width - marginRight)
+    .attr("y1", (d) => y(d))
+    .attr("y2", (d) => y(d));
+
+  svg
+    .append("defs")
+    .append("marker")
+    .attr("id", "gradient-arrowhead")
+    .attr("viewBox", "0 -3 6 6")
+    .attr("refX", 5)
+    .attr("refY", 0)
+    .attr("markerWidth", 4)
+    .attr("markerHeight", 4)
+    .attr("orient", "auto")
+    .append("path")
+    .attr("d", "M0,-3L6,0L0,3")
+    .attr("fill", "#918ccd");
+
+  svg
+    .append("g")
+    .attr("stroke", "#918ccd")
+    .attr("stroke-width", 1.2)
+    .selectAll("line")
+    .data(points.filter((d) => d[2] !== 0 || d[3] !== 0))
+    .join("line")
+    .attr("x1", (d) => x(d[0]))
+    .attr("y1", (d) => y(d[1]))
+    .attr("x2", (d) => x(d[0] + d[2]))
+    .attr("y2", (d) => y(d[1] + d[3]))
+    .attr("marker-end", "url(#gradient-arrowhead)");
+
+  svg
+    .append("g")
+    .attr("fill", "#918ccd")
+    .selectAll("circle")
+    .data(points.filter((d) => d[2] === 0 && d[3] === 0))
+    .join("circle")
+    .attr("cx", (d) => x(d[0]))
+    .attr("cy", (d) => y(d[1]))
+    .attr("r", 2);
+
+  // X-axis.
+  svg
+    .append("g")
+    .attr("transform", `translate(0,${height - marginBottom})`)
+    .call(d3.axisBottom(x));
+
+  // Y-axis.
+  svg
+    .append("g")
+    .attr("transform", `translate(${marginLeft},0)`)
+    .call(d3.axisLeft(y));
+
+  // Axis titles.
+  svg
+    .append("text")
+    .attr("x", (marginLeft + (width - marginRight)) / 2)
+    .attr("y", height - 4)
+    .attr("text-anchor", "middle")
+    .attr("fill", "#444")
+    .text("X");
+
+  svg
+    .append("text")
+    .attr("x", 14)
+    .attr("y", (marginTop + (height - marginBottom)) / 2)
+    .attr("text-anchor", "middle")
+    .attr("fill", "#444")
+    .text("Y");
 
   parent.appendChild(svg.node());
 };

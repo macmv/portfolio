@@ -15,8 +15,8 @@ pub struct Point {
 #[wasm_bindgen]
 pub fn kernel_poly6(distance: f32, radius: f32) -> f32 { fl_sim::kernel_poly6(distance, radius) }
 #[wasm_bindgen]
-pub fn kernel_spiky_gradient(displacement: Point, radius: f32) -> Point {
-  let p = fl_sim::kernel_spiky_gradient(nalgebra::vector![displacement.x, displacement.y], radius);
+pub fn kernel_spiky_gradient(dx: f32, dy: f32, radius: f32) -> Point {
+  let p = fl_sim::kernel_spiky_gradient(nalgebra::vector![dx, dy], radius);
   Point { x: p.x, y: p.y }
 }
 #[wasm_bindgen]

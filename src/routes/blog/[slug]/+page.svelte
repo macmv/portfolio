@@ -1,7 +1,7 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import init from "../../../../fluid/pkg";
-  import { buildFluid, drawPoly6Graph } from "./fluid";
+  import { buildFluid, drawGradientGraph, drawPoly6Graph } from "./fluid";
   const dev = import.meta.env.DEV;
 
   const { data } = $props<{
@@ -47,6 +47,7 @@
     );
 
     drawPoly6Graph(document.getElementById("graph-poly6"));
+    drawGradientGraph(document.getElementById("graph-gradient"));
   };
 
   if (dev) {
