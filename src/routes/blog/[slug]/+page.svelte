@@ -29,7 +29,22 @@
   let sims = [];
 
   const addSims = () => {
-    sims.push(buildFluid(document.getElementById("simulation-verlet")));
+    sims.push(
+      buildFluid(document.getElementById("simulation-gravity"), {
+        features: {
+          descent: false,
+          tensile: false,
+        },
+      }),
+    );
+    sims.push(
+      buildFluid(document.getElementById("simulation-verlet"), {
+        features: {
+          descent: true,
+          tensile: true,
+        },
+      }),
+    );
   };
 
   if (dev) {

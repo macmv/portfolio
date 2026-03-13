@@ -15,8 +15,10 @@ pub struct Point {
 #[wasm_bindgen]
 impl Sim {
   #[wasm_bindgen(constructor)]
-  pub fn new() -> Self {
+  pub fn new(descent: bool, tensile: bool) -> Self {
     let mut sim = Simulation::new(nalgebra::vector![8.0, 8.0]);
+    sim.feature_descent = descent;
+    sim.feature_tensile = tensile;
 
     let mut i = 0;
     for y in 4..4 + 8 {

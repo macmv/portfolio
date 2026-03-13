@@ -18,7 +18,10 @@ const y = d3
   .domain([0, 8])
   .range([height - marginBottom, marginTop]);
 
-let initialized = false;
+export type Features = {
+  descent: boolean;
+  tensile: boolean;
+};
 
 export class Simulation {
   svg: d3.Selection<SVGSVGElement, unknown, null, undefined>;
@@ -26,18 +29,23 @@ export class Simulation {
   clicked: boolean;
   pointer_x: number;
   pointer_y: number;
+  features: Features;
 
-  constructor(svg: d3.Selection<SVGSVGElement, unknown, null, undefined>) {
+  constructor(
+    svg: d3.Selection<SVGSVGElement, unknown, null, undefined>,
+    features: Features,
+  ) {
     this.svg = svg;
     this.running = true;
     this.clicked = false;
     this.pointer_x = 0;
     this.pointer_y = 0;
+    this.features = features;
     this.renderLoop();
   }
 
   renderLoop = () => {
-    const sim = new Sim();
+    const sim = new Sim(this.features.descent, this.features.tensile);
     this.renderChart(sim.points());
 
     const frame = () => {
@@ -70,10 +78,13 @@ export class Simulation {
   };
 }
 
-export const buildFluid = (parent: HTMLElement) => {
+export const buildFluid = (
+  parent: HTMLElement,
+  { features }: { features: Features },
+) => {
   const svg = d3.create("svg").attr("width", width).attr("height", height);
 
-  const sim = new Simulation(svg);
+  const sim = new Simulation(svg, features);
 
   const drag = d3
     .drag()

@@ -12,5 +12,5 @@ console_log = "1.0.0"
 wasm-bindgen = "0.2.100"
 wasm-bindgen-futures = "0.4.50"
 
-fl-sim = { path = "../../rust/fluid-sim/fl-sim" }
+fl-sim = { path = "../../rust/fluid-sim/fl-sim", features = ["demo"] }
 nalgebra = { version = "0.34.1", default-features = false }
