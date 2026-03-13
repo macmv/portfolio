@@ -132,7 +132,14 @@ export const buildFluid = (
   return sim;
 };
 
-export const drawPoly6Graph = (parent: HTMLElement) => {
+export const draw2dGraph = (
+  parent: HTMLElement,
+  x_bounds: [number, number],
+  x_title: string,
+  y_bounds: [number, number],
+  y_title: string,
+  func: (x: number) => number,
+) => {
   const width = 500;
   const height = 400;
   const marginTop = 20;
@@ -141,21 +148,20 @@ export const drawPoly6Graph = (parent: HTMLElement) => {
   const marginLeft = 50;
 
   const svg = d3.create("svg").attr("width", width).attr("height", height);
-  const radius = 1;
   const sampleCount = 200;
   const points = Array.from({ length: sampleCount + 1 }, (_, i) => {
-    const distance = (i / sampleCount) * 2 - 1;
-    return [distance, kernel_poly6(distance, radius)] as const;
+    const x = (i / sampleCount) * (x_bounds[1] - x_bounds[0]) + x_bounds[0];
+    return [x, func(x)] as const;
   });
 
   const x = d3
     .scaleLinear()
-    .domain([-radius, radius])
+    .domain(x_bounds)
     .range([marginLeft, width - marginRight]);
 
   const y = d3
     .scaleLinear()
-    .domain([0, 1.4])
+    .domain(y_bounds)
     .range([height - marginBottom, marginTop]);
 
   // Draw faint background grid.
@@ -211,7 +217,7 @@ export const drawPoly6Graph = (parent: HTMLElement) => {
     .attr("y", height - 4)
     .attr("text-anchor", "middle")
     .attr("fill", "#444")
-    .text("Distance");
+    .text(x_title);
 
   svg
     .append("text")
@@ -220,7 +226,7 @@ export const drawPoly6Graph = (parent: HTMLElement) => {
     .attr("y", 14)
     .attr("text-anchor", "middle")
     .attr("fill", "#444")
-    .text("Wpoly6");
+    .text(y_title);
 
   parent.appendChild(svg.node());
 };

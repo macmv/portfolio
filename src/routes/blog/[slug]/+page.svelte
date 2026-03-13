@@ -1,7 +1,7 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import init from "../../../../fluid/pkg";
-  import { buildFluid, drawGradientGraph, drawPoly6Graph } from "./fluid";
+  import init, { kernel_poly6 } from "../../../../fluid/pkg";
+  import { buildFluid, draw2dGraph, drawGradientGraph } from "./fluid";
   const dev = import.meta.env.DEV;
 
   const { data } = $props<{
@@ -46,7 +46,14 @@
       }),
     );
 
-    drawPoly6Graph(document.getElementById("graph-poly6"));
+    draw2dGraph(
+      document.getElementById("graph-poly6"),
+      [-1, 1],
+      "Distance",
+      [0, 1.4],
+      "Wpoly6",
+      (x) => kernel_poly6(x, 1),
+    );
     drawGradientGraph(document.getElementById("graph-gradient"));
   };
 
