@@ -250,7 +250,7 @@ export const drawGradientGraph = (parent: HTMLElement) => {
 
   const svg = d3.create("svg").attr("width", width).attr("height", height);
   const sampleCount = 20;
-  const divisor = 50;
+  const divisor = 120;
   const points = Array.from({ length: sampleCount + 1 }, (_, ix) =>
     Array.from({ length: sampleCount + 1 }, (_, iy) => {
       const px = (ix / sampleCount) * 2 - 1;
@@ -261,8 +261,8 @@ export const drawGradientGraph = (parent: HTMLElement) => {
       return [
         px,
         py,
-        -((grad.x / mag) * 0.05 + grad.x / divisor),
-        -((grad.y / mag) * 0.05 + grad.y / divisor),
+        (grad.x / mag) * 0.03 + grad.x / divisor,
+        (grad.y / mag) * 0.03 + grad.y / divisor,
       ] as const;
     }),
   ).flat();
