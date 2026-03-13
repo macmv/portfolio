@@ -36,15 +36,17 @@
       buildFluid(document.getElementById("simulation-gravity"), {
         features: {
           descent: false,
-          tensile: false,
+          naive_lambda: false,
+          no_tensile: false,
         },
       }),
     );
     sims.push(
-      buildFluid(document.getElementById("simulation-verlet"), {
+      buildFluid(document.getElementById("simulation-naive-lambda"), {
         features: {
           descent: true,
-          tensile: true,
+          naive_lambda: true,
+          no_tensile: true,
         },
       }),
     );

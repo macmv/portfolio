@@ -27,10 +27,11 @@ pub fn tensile_correction(distance: f32, radius: f32) -> f32 {
 #[wasm_bindgen]
 impl Sim {
   #[wasm_bindgen(constructor)]
-  pub fn new(descent: bool, tensile: bool) -> Self {
+  pub fn new(descent: bool, naive_lambda: bool, no_tensile: bool) -> Self {
     let mut sim = Simulation::new(nalgebra::vector![8.0, 8.0]);
     sim.feature_descent = descent;
-    sim.feature_tensile = tensile;
+    sim.feature_naive_lambda = naive_lambda;
+    sim.feature_no_tensile = no_tensile;
 
     let mut i = 0;
     for y in 4..4 + 8 {

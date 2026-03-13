@@ -25,7 +25,8 @@ const y = d3
 
 export type Features = {
   descent: boolean;
-  tensile: boolean;
+  naive_lambda: boolean;
+  no_tensile: boolean;
 };
 
 export class Simulation {
@@ -50,7 +51,11 @@ export class Simulation {
   }
 
   renderLoop = () => {
-    const sim = new Sim(this.features.descent, this.features.tensile);
+    const sim = new Sim(
+      this.features.descent,
+      this.features.naive_lambda,
+      this.features.no_tensile,
+    );
     this.renderChart(sim.points());
 
     const frame = () => {
