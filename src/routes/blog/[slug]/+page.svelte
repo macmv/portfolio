@@ -1,7 +1,6 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import init, { Sim, Point } from "../../../../fluid/pkg";
-  import * as d3 from "d3";
+  import init from "../../../../fluid/pkg";
   import { buildFluid } from "./fluid";
   const dev = import.meta.env.DEV;
 
@@ -23,10 +22,19 @@
 
       container.innerHTML = `<pre>${errors}</pre>`;
     }
+
+    addSims();
+  };
+
+  let sims = [];
+
+  const addSims = () => {
+    sims.push(buildFluid(document.getElementById("simulation-verlet")));
   };
 
   if (dev) {
     onMount(async () => {
+      await init();
       await render();
 
       if (import.meta.hot) {
@@ -35,23 +43,25 @@
           if (d.path === data.source) render();
         });
       }
+
+      () => {
+        for (const sim of sims) {
+          sim.stop();
+        }
+      };
+    });
+  } else {
+    onMount(async () => {
+      await init();
+      addSims();
+
+      () => {
+        for (const sim of sims) {
+          sim.stop();
+        }
+      };
     });
   }
-
-  let sims = [];
-
-  onMount(() => {
-    init().then(() => {
-      sims.push(buildFluid(document.getElementById("simulation-foo")));
-      sims.push(buildFluid(document.getElementById("simulation-bar")));
-    });
-
-    () => {
-      for (const sim of sims) {
-        sim.stop();
-      }
-    };
-  });
 </script>
 
 <div id="simulation-foo"></div>
@@ -116,5 +126,10 @@
   .typst :global(ul) {
     padding-left: 2em;
     list-style-type: disc;
+  }
+
+  .typst :global(.simulation) {
+    display: flex;
+    justify-content: center;
   }
 </style>
