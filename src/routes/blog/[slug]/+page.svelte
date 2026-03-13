@@ -1,6 +1,9 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import init, { kernel_poly6 } from "../../../../fluid/pkg";
+  import init, {
+    kernel_poly6,
+    kernel_spiky_gradient,
+  } from "../../../../fluid/pkg";
   import { buildFluid, draw2dGraph, drawGradientGraph } from "./fluid";
   const dev = import.meta.env.DEV;
 
@@ -55,6 +58,14 @@
       (x) => kernel_poly6(x, 1),
     );
     drawGradientGraph(document.getElementById("graph-gradient"));
+    draw2dGraph(
+      document.getElementById("graph-gradient-slice"),
+      [-1, 1],
+      "X",
+      [0, 10],
+      "Gradient",
+      (x) => Math.abs(kernel_spiky_gradient(x, 0, 1).x),
+    );
   };
 
   if (dev) {
