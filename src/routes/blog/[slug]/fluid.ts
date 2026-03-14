@@ -107,6 +107,22 @@ export const buildFluid = (
   const svg = d3.create("svg").attr("width", width).attr("height", height);
 
   const sim = new Simulation(svg, features);
+  sim.paused = true;
+
+  const stage = document.createElement("div");
+  stage.className = "simulation-stage";
+
+  const overlay = document.createElement("button");
+  overlay.className = "simulation-overlay button";
+  overlay.type = "button";
+  overlay.setAttribute("aria-label", "Start simulation");
+  overlay.appendChild(createLucide(Play));
+
+  overlay.onclick = () => {
+    sim.paused = false;
+    pause.replaceChildren(pauseIcon);
+    overlay.remove();
+  };
 
   const drag = d3
     .drag()
@@ -173,21 +189,21 @@ export const buildFluid = (
   pause.className = "button";
   let pauseIcon = createLucide(Pause);
   let playIcon = createLucide(Play);
-  pause.appendChild(pauseIcon);
+  pause.appendChild(playIcon);
   pause.onclick = () => {
-    sim.paused = !sim.paused;
     if (sim.paused) {
-      pause.removeChild(pauseIcon);
-      pause.appendChild(playIcon);
+      pause.replaceChildren(pauseIcon);
     } else {
-      pause.removeChild(playIcon);
-      pause.appendChild(pauseIcon);
+      sim.paused = true;
+      pause.replaceChildren(playIcon);
     }
   };
   controls.appendChild(pause);
 
-  parent.appendChild(controls);
-  parent.appendChild(svg.node());
+  stage.appendChild(controls);
+  stage.appendChild(svg.node());
+  stage.appendChild(overlay);
+  parent.appendChild(stage);
   return sim;
 };
 

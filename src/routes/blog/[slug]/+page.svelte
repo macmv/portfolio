@@ -204,16 +204,32 @@
     display: flex;
     flex-direction: column;
     width: fit-content;
+    max-width: 100%;
     margin: 0 auto;
   }
 
-  .typst :global(.simulation > .controls) {
+  .typst :global(.simulation-stage > .controls) {
     display: flex;
+    width: 100%;
     gap: 10pt;
     justify-content: end;
   }
 
+  .typst :global(.simulation-stage) {
+    position: relative;
+  }
+
+  .typst :global(.simulation-overlay) {
+    position: absolute;
+    inset: 0;
+    background: color-mix(in srgb, white 78%, transparent);
+    backdrop-filter: blur(2px);
+  }
+
   .typst :global(.button) {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     border-radius: 5pt;
     padding: 5pt 10pt;
     transition: background-color 0.2s ease-in;
