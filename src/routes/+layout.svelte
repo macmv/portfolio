@@ -8,15 +8,13 @@
 
 <div style="width: 100%">
   <div
-    class={
-      "header" +
+    class={"header" +
       (page.url.pathname == "/" ? " header-fixed" : "") +
-      (page.url.pathname == "/sharks" ? " header-on-image" : "")
-    }
+      (page.url.pathname == "/sharks" ? " header-on-image" : "")}
   >
     <Link href="/">Home</Link>
     <Link href="/parsers">Parsers</Link>
-    <Link href="/blog/foo">Blog</Link>
+    <Link href="/blog/sewable-fluid">Blog</Link>
     <Link href="/sharks">Sharks!</Link>
   </div>
   {@render children()}
