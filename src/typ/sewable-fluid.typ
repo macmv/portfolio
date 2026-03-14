@@ -23,7 +23,7 @@ In this post, I'll go over making a fluid simulation that looks like this:
 I'll cover the details of sewing it, what parts you'll need, and how to program it. All the source
 code can be found on my GitHub. The code for the standalone fluid simulation is in this repository:
 #link("https://github.com/macmv/fluid-sim"), and the code for the microcontroller is on this
-repository: #link("https://github.com/macmv/fl-pi").
+repository: #link("https://github.com/macmv/fl-stm32").
 
 This was heavily inspired by a project from mixtela, which can be viewed here:
 #link("https://www.youtube.com/watch?v=jis1MC5Tm8k").
@@ -42,9 +42,9 @@ be turned down, which would increase the battery life up to 10x when on a lower 
 
 = Electronics
 
-The simulation itself revolves around a mictrocontroller and an innertial measurement unit (IMU).
+The simulation itself revolves around a mictrocontroller and an inertial measurement unit (IMU).
 The microcontroller runs the fluid simulation, and the IMU measures what direction gravity is in, so
-that the fluid flows downwards. The display is built out of a strip of neopixels, which are
+that the fluid flows downwards. The display is built out of a strip of Neopixels, which are
 individually addressable LEDs.
 
 The microcontroller I'm using is the STM32F401CCU6. The important bits of that name are the "STM32,"
@@ -53,6 +53,66 @@ The F4 class has native floating point instructions, which is why it's fast enou
 entire simulation. The IMU I'm using  is the MPU-6050, which is a widely available chip (at least at
 the time of writing). This IMU is a combined accelerometer and gyroscope. Only the accelerometer is
 used in this project.
+
+Lastly, I'm using a strip of Neopixels. These are cheap and can be easily purchased in a
+pre-assembled strip. I'm specifically using one that is built on a flexible PCB, so that the entire
+assembly is flexible.
+
+#let placeholder = html.elem(
+  "div",
+  attrs: (
+    style: ("width: 500px; height: 400px; background: #fff; margin: auto; display: flex;
+  justify-content: center; align-items: center; border-radius: 5pt"),
+  ),
+  [Placeholder image!],
+)
+
+== Materials
+
+Here's all the materials you'll need:
+
+- Microcontroller (STM32F401CCU6)
+- Accelerometer (MPU-6050)
+- A strip of Neopixels. Mine was 144 LEDs long, listed as 1 meter.
+- Fabric (I used felt, as it's easy to sew and doesn't fray).
+- Scissors (both for cutting the neopixels, fabric, and thread).
+- Sewing thread/needles.
+- Conductive thread and/or wires. Both are handy, but you can get away with only one of them.
+- Soldering iron. If you don't have one, you can get away with conductive thread and glue, although
+  the Neopixels might not work as well.
+
+== Sewing
+
+The first step is to cut the Neopixels into short strips. The goal is to make a grid of these LEDs,
+so cut them up in such a way that you have even length strips. You'll want to attach these in
+alternating directions. The input/output side of the Neopixels is important, and they'll only work
+in one direction. The goal is to attach the output of one row to the input of the next, so that's
+why they're in opposite directions.
+
+The Neopixel strips are quite simple, as they only have three wires going through them. So, you can
+sew through them if you're careful, and attach them directly to the fabric. If you aren't
+comfortable sewing through the LED strips, you can also use fabric glue, or simply sew over them in
+a couple places. Once you're done, you should have something that looks like this:
+
+#placeholder
+
+Now, we need to attach the LED strips together. This is where you'll need a soldering iron, or if
+you don't have one, to get creative with some conductive thread. Each +5v, GND, and signal line
+needs to be attached. The output of each row will be attached into the input of the next row, so you
+should attach them with short, 1-inch or so wires. I soldered mine directly together, but you can
+also use conductive thread for this part.
+
+#placeholder
+
+Next, we need to attach the microcontroller, IMU, and the battery. The orientation of the IMU is
+important. The code is written to expect the +Z direction to go vertically upwards with the LED
+strips. So, if you attach the accelerometer in a different orientation, you'll need to edit the code
+to make the lights actually display in the correct orientation.
+
+The microcontroller and battery can be attached anywhere. I put the microcontroller near the start
+of the LED strip, so that it was easy to attach them up.
+
+#placeholder
 
 == Wiring everything up
 
@@ -77,7 +137,7 @@ All that being said, the circuit we're going to build will look a bit like so:
     x: -4, y: 0,
     fill: util.colors.blue,
     ports: (
-      east: ((id: "SCL", name: "SCL"), (id: "SDL", name: "SDL")),
+      east: ((id: "SCL", name: "SCL"), (id: "SDA", name: "SDA")),
       south: ((id: "vbat", name: "VBAT"), (id: "gnd", name: "GND")),
     ),
   )
@@ -88,7 +148,7 @@ All that being said, the circuit we're going to build will look a bit like so:
     w: 5, h: 2,
     x: 0, y: 0,
     ports: (
-      west: ((id: "SCL", name: "SCL"), (id: "SDL", name: "SDL")),
+      west: ((id: "SCL", name: "SCL"), (id: "SDA", name: "SDA")),
       east: ((id: "GPIO0", name: "GPIO-0"),),
       south: (
         (id: "3v", name: "3.3v"),
@@ -113,7 +173,7 @@ All that being said, the circuit we're going to build will look a bit like so:
     dodge-y: -1.0,
   )
   wire.wire("w1", ("imu-port-SCL", "pi-port-SCL"))
-  wire.wire("w1", ("imu-port-SDL", "pi-port-SDL"))
+  wire.wire("w1", ("imu-port-SDA", "pi-port-SDA"))
 
   for i in range(4) {
     element.block(
@@ -156,11 +216,39 @@ All that being said, the circuit we're going to build will look a bit like so:
   wire.wire("w1", ("pi-port-GPIO0", "l-0-port-data-in"))
 }))
 
-Or for short:
-- We'll attach the IMU to the STM32 with two wires for the I2C connection.
-- We'll attach a single wire from the STM32 to the first LED, then that LED will be connected to the
-  next, in a daisy chain.
-- The neopixels (in purple) run off 5v, and the STM32 can step down 5v to the 3.3v the IMU needs.
+The purple squares on the right are the neopixels. We've already attached all of them together. So,
+the only wiring left to do is between the microcontroller, IMU, and the battery.
+
+The IMU needs to be attached to the microcontroller over the SCL and SDA pins. It also needs 3.3v
+power, so attach it to the 3.3v pin on the microcontroller. The microcontroller and Neopixels both
+run off of 5v power, so we attach the 5v battery pack to both the first Neopixel and the VBAT pin on
+the microcontroller.
+
+Once it's finished, it should look like this:
+
+#placeholder
+
+= Uploading the code
+
+Uploading the code to the microcontroller is simple. Clone the GitHub repository for the code, from
+here: #link("https://github.com/macmv/fl-stm32"). Then, install Rust from their website: #link("").
+
+If you used a different orientation for the IMU, or a different length of LED strip, you might need
+to adjust some constants, and you should do that now. Once the code is updated, compile it with this
+command:
+
+```
+cargo build --target thumbv7em-none-eabihf --release
+```
+
+Then, hold the BOOT button the microcontroller, and plug it into the computer. Upload the file in
+`target/thumbv7em-none-eabihf/debug/fl-stm32` to the board, and it should start working. If you need
+to change any constants again, you can always re-compile and re-upload the code, although you will
+need to unplug the board and press the BOOT button again each time.
+
+The rest of this tutorial talks about the nitty gritty of the fluid simulation itself, so if you
+just wanted the fluid simulation patch, feel free to stop here. Read on for lots of math and
+interactive demos!
 
 = Particle-based Fluid Simulations
 
