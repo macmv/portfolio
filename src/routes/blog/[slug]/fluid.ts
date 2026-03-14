@@ -170,6 +170,8 @@ export const buildFluid = (
   step.onclick = () => {
     if (!sim.paused) {
       sim.paused = true;
+      pause.removeChild(pauseIcon);
+      pause.appendChild(playIcon);
     }
     sim.sim.tick();
   };
