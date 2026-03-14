@@ -231,7 +231,8 @@ Once it's finished, it should look like this:
 = Uploading the code
 
 Uploading the code to the microcontroller is simple. Clone the GitHub repository for the code, from
-here: #link("https://github.com/macmv/fl-stm32"). Then, install Rust from their website: #link("").
+here: #link("https://github.com/macmv/fl-stm32"). Then, install Rust from their website:
+#link("https://rust-lang.org/tools/install/").
 
 If you used a different orientation for the IMU, or a different length of LED strip, you might need
 to adjust some constants, and you should do that now. Once the code is updated, compile it with this
