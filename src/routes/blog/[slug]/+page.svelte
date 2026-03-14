@@ -158,8 +158,17 @@
     font-family: "Liberation Serif";
   }
 
-  .typst :global(pre *) {
+  .typst :global(pre *),
+  .typst :global(code) {
+    font-size: 10pt;
     font-family: "Liberation Mono", monospace;
+  }
+
+  .typst :global(code:not(pre code)) {
+    border: 0px solid #aaa;
+    background: #d8d8d8;
+    padding: 0pt 3pt;
+    border-radius: 2pt;
   }
 
   .typst :global(pre) {
