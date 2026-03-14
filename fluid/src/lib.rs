@@ -33,15 +33,19 @@ impl Sim {
     sim.feature_naive_lambda = naive_lambda;
     sim.feature_no_tensile = no_tensile;
 
+    let mut sim = Sim { sim };
+    sim.restart();
+    sim
+  }
+
+  pub fn restart(&mut self) {
     let mut i = 0;
     for y in 4..4 + 8 {
       for x in 4..4 + 16 {
-        sim.set_particle(i, nalgebra::point![x as f32 / 4.0, y as f32 / 4.0]);
+        self.sim.set_particle(i, nalgebra::point![x as f32 / 4.0, y as f32 / 4.0]);
         i += 1;
       }
     }
-
-    Sim { sim }
   }
 
   pub fn apply_repulsion(&mut self, x: f32, y: f32, radius: f32, force: f32) {

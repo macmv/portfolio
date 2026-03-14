@@ -16,6 +16,10 @@ In this post, I'll go over making a fluid simulation that looks like this:
 
 #image("assets/sewable-fluid/title.png")
 
+And here's an interactive version:
+
+#html.elem("div", attrs: (class: "simulation", id: "simulation-demo"))
+
 I'll cover the details of sewing it, what parts you'll need, and how to program it.
 
 = Electronics

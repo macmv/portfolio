@@ -1,10 +1,20 @@
 import * as d3 from "d3";
+import {
+  createElement as createLucide,
+  Check,
+  Pause,
+  RotateCw,
+  Play,
+  RotateCcw,
+  StepForward,
+} from "lucide";
 import init, {
   Sim,
   Point,
   kernel_poly6,
   kernel_spiky_gradient,
 } from "../../../../fluid/pkg";
+import { mount } from "svelte";
 
 const width = 500;
 const height = 400;
@@ -31,10 +41,12 @@ export type Features = {
 
 export class Simulation {
   svg: d3.Selection<SVGSVGElement, unknown, null, undefined>;
+  paused: boolean;
   running: boolean;
   clicked: boolean;
   pointer_x: number;
   pointer_y: number;
+  sim: Sim;
   features: Features;
 
   constructor(
@@ -42,28 +54,32 @@ export class Simulation {
     features: Features,
   ) {
     this.svg = svg;
+    this.paused = false;
     this.running = true;
     this.clicked = false;
     this.pointer_x = 0;
     this.pointer_y = 0;
     this.features = features;
-    this.renderLoop();
-  }
-
-  renderLoop = () => {
-    const sim = new Sim(
+    this.sim = new Sim(
       this.features.descent,
       this.features.naive_lambda,
       this.features.no_tensile,
     );
-    this.renderChart(sim.points());
+    this.renderLoop();
+  }
+
+  renderLoop = () => {
+    this.renderChart();
 
     const frame = () => {
       if (this.clicked) {
-        sim.apply_repulsion(this.pointer_x, this.pointer_y, 1.5, 3000);
+        this.sim.apply_repulsion(this.pointer_x, this.pointer_y, 1.5, 3000);
       }
-      sim.tick();
-      this.renderChart(sim.points());
+      if (!this.paused) {
+        this.sim.tick();
+      }
+      this.renderChart();
+
       if (this.running) {
         requestAnimationFrame(frame);
       }
@@ -76,10 +92,10 @@ export class Simulation {
     this.running = false;
   };
 
-  renderChart = (points: Point[]) => {
+  renderChart = () => {
     this.svg
       .selectAll("circle")
-      .data(points.map((p, i) => ({ id: i, x: p.x, y: p.y })))
+      .data(this.sim.points().map((p, i) => ({ id: i, x: p.x, y: p.y })))
       .join("circle")
       .attr("cx", (d) => x(d.x))
       .attr("cy", (d) => y(d.y))
@@ -137,6 +153,46 @@ export const buildFluid = (
     .attr("transform", `translate(${marginLeft},0)`)
     .call(d3.axisLeft(y));
 
+  let controls = document.createElement("div");
+  controls.className = "controls";
+
+  const restart = document.createElement("a");
+  restart.className = "button";
+  restart.appendChild(createLucide(RotateCcw));
+  restart.onclick = () => {
+    sim.sim.restart();
+  };
+  controls.appendChild(restart);
+
+  const step = document.createElement("a");
+  step.className = "button";
+  step.appendChild(createLucide(StepForward));
+  step.onclick = () => {
+    if (!sim.paused) {
+      sim.paused = true;
+    }
+    sim.sim.tick();
+  };
+  controls.appendChild(step);
+
+  const pause = document.createElement("a");
+  pause.className = "button";
+  let pauseIcon = createLucide(Pause);
+  let playIcon = createLucide(Play);
+  pause.appendChild(pauseIcon);
+  pause.onclick = () => {
+    sim.paused = !sim.paused;
+    if (sim.paused) {
+      pause.removeChild(pauseIcon);
+      pause.appendChild(playIcon);
+    } else {
+      pause.removeChild(playIcon);
+      pause.appendChild(pauseIcon);
+    }
+  };
+  controls.appendChild(pause);
+
+  parent.appendChild(controls);
   parent.appendChild(svg.node());
   return sim;
 };

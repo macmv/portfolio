@@ -34,6 +34,16 @@
 
   const addSims = () => {
     sims.push(
+      buildFluid(document.getElementById("simulation-demo"), {
+        features: {
+          descent: true,
+          naive_lambda: false,
+          no_tensile: false,
+        },
+      }),
+    );
+
+    sims.push(
       buildFluid(document.getElementById("simulation-gravity"), {
         features: {
           descent: false,
@@ -129,9 +139,6 @@
   }
 </script>
 
-<div id="simulation-foo"></div>
-<div id="simulation-bar"></div>
-
 <div class="typst" bind:this={container}>
   {#if !dev}
     {@html data.html}
@@ -195,6 +202,23 @@
 
   .typst :global(.simulation) {
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    width: fit-content;
+    margin: 0 auto;
+  }
+
+  .typst :global(.simulation > .controls) {
+    display: flex;
+    gap: 10pt;
+    justify-content: end;
+  }
+
+  .typst :global(.button) {
+    border-radius: 5pt;
+    padding: 5pt 10pt;
+    transition: background-color 0.2s ease-in;
+  }
+  .typst :global(.button):hover {
+    background-color: #fff;
   }
 </style>
