@@ -365,17 +365,8 @@ total_position_delta +=
   (particle.density_error + neighbor.density_error + correction)
     * PARTICLE_MASS
     * kernel_gradient;
-```rs
+```
 
 And that makes the surface of the fluid behave much more smoothly:
 
 #html.elem("div", attrs: (class: "simulation", id: "simulation-with-tensile"))
-
-/*
-To do this effeciently, we only consider particles within 1 unit of each other. The force tapers off
-to zero at the end of this curve, and any particles further away than 1 unit will not interact with
-each other at all. So, this simulation uses a spatial index of particles to find which ones are
-closest to each other. This is effectivly just a grid of sets. To find nearby particles, we just
-look at a 2x2 grid of sets, and all particles within those sets will be somewhat close to the target
-particle.
-*/
