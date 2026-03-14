@@ -287,9 +287,8 @@ particle's positions, and we'll have something that looks a bit like so:
 #html.elem("div", attrs: (class: "simulation", id: "simulation-naive-lambda"))
 
 This is looking pretty good! The particles are reacting to each other, and making a sort of squishy
-substance. But it doesn't really look like water. To fix this, we need to do two things: fix that
-`density_error` coefficient, and add what's called tensile correction, or the sticky force that
-attracts particles into clumps.
+substance. But it doesn't really look like water. To fix this, we've got to go fix that
+`density_error` I mentioned before.
 
 == Improving the Simulation
 
@@ -342,7 +341,8 @@ immediately looks far better:
 
 Specifically, the particles at the bottom aren't getting squished at all, and the fluid doesn't feel
 squishy any more. It actually responds like a splash of water, and it takes up a consistent amount
-of space.
+of space. We've got a new problem now though: the surface is constantly moving around. This can be
+fixed up with a new corrective force, known as tensile correction.
 
 == Tensile Correction
 
