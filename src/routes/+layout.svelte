@@ -7,7 +7,13 @@
 </script>
 
 <div style="width: 100%">
-  <div class={"header" + (page.url.pathname == "/" ? " header-fixed" : "")}>
+  <div
+    class={
+      "header" +
+      (page.url.pathname == "/" ? " header-fixed" : "") +
+      (page.url.pathname == "/sharks" ? " header-on-image" : "")
+    }
+  >
     <Link href="/">Home</Link>
     <Link href="/parsers">Parsers</Link>
     <Link href="/blog/foo">Blog</Link>
@@ -18,6 +24,8 @@
 
 <style>
   .header {
+    position: relative;
+    z-index: 10;
     width: 100%;
     display: flex;
     align-items: center;
@@ -28,6 +36,20 @@
 
   .header-fixed {
     position: fixed;
+  }
+
+  .header-on-image {
+    color: #fff;
+    text-shadow: 0 2px 10px rgb(0 0 0 / 0.35);
+  }
+
+  .header-on-image :global(.link-wrapper) {
+    color: #fff;
+    text-shadow: 0 2px 10px rgb(0 0 0 / 0.35);
+  }
+
+  .header-on-image :global(.link-content::after) {
+    border-color: var(--light-blue);
   }
 
   :global(a) {
