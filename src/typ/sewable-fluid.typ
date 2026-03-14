@@ -20,7 +20,25 @@ In this post, I'll go over making a fluid simulation that looks like this:
 
 #html.elem("div", attrs: (class: "simulation", id: "simulation-demo"))
 
-I'll cover the details of sewing it, what parts you'll need, and how to program it.
+I'll cover the details of sewing it, what parts you'll need, and how to program it. All the source
+code can be found on my GitHub. The code for the standalone fluid simulation is in this repository:
+#link("https://github.com/macmv/fluid-sim"), and the code for the microcontroller is on this
+repository: #link("https://github.com/macmv/fl-pi").
+
+This was heavily inspired by a project from mixtela, which can be viewed here:
+#link("https://www.youtube.com/watch?v=jis1MC5Tm8k").
+
+This project is meant to serve as an interesting design piece, that you could sew onto the shoulder
+of a jacket, or on the outside of a backpack. It is not washable, as it contains sensors that can't
+withstand water. However, these sensors are underneat the outter fabric, so it could withstand light
+rain easily, as the LED strips on the outside are quite water resistant.
+
+This runs off 3 AAA batteries. If around half the LEDs are on, which is the case most of the time,
+and they are at full brightness, combined the LEDS will draw about 0.6 amps at 5v. This is driven
+off of 3 AAA batteries, which hold about 1 amp hour of charge. So, we can expect this to last for
+about an hour and a half on a full charge. The microcontroller and sensors draw a couple milliamps
+in comparison, so they can be ignored for battery life purposes. Additionally, the brightness could
+be turned down, which would increase the battery life up to 10x when on a lower brightness setting.
 
 = Electronics
 
@@ -146,17 +164,24 @@ Or for short:
 
 = Particle-based Fluid Simulations
 
-Particle based fluid simulations revolve around gradient descent. Specifically, they revolve around
-a world of particles, that have physics applied to each other, and then all repel each other when
-they get to close. 
+Particle based fluid simulations revolve around attempting to keep all the particles an even
+distance away from each other. Or, more specifically, trying to keep all the particles at an even
+density. The density at any particle can be estimated by counting how many particles are nearby, and
+how close they are. Then, the particles can be moved towards or away from neighboring particles to
+maintain a consistent density throughout.
+
+This problem of maintaining constant density can be solved by repeatedly inching the particles
+towards/away from each other, and then re-computing all of their densities. This is done using an
+algorithm known as gradient descent. Most of the math done here is based off the paper "Position
+Based Fluids," which can be read here: #link("https://mmacklin.com/pbf_sig_preprint.pdf").
 
 == Defining our Particles
 
 Before getting into any of the math, we'll start off by defining our particles. Each particle is a
-point in space, with a velocity and a position. We'll start by just applying a force of gravity to
-them. I'll be using Verlet integration, which is a method of applying a force to a particle over
-discrete time steps, without losing accuracy over time. Specifically, for each particle, we run the
-following code:
+point in space, with a position and mass. All particles have the same mass in this simulation. We'll
+start by just applying a force of gravity to them. I'll be using Verlet integration, which is a
+method of applying a force to a particle over discrete time steps, without losing accuracy over
+time. Specifically, for each particle, we run the following code:
 
 ```rs
 let velocity = particle.position - particle.prev_position;
@@ -278,12 +303,21 @@ for particle in self.particles {
 }
 ```
 
-We sum up the gradients, using the sum of the particle's density error and it's neighbor's density
-error. When the density error is positive, the particles will move towards each other, and they'll
-repel otherwise.
+The density error between a particle and it's neighbor is just the sum of their errors. So we
+multiply that by the gradient vector, and the result is a vector that points the particles towards
+or away from each other, depending on how close they are. This vector can be summed for a particle
+and all of it's neighbors, and that sum represents the direction the particle should move to
+minimize it's own error. Minimizing it's error also means making the density even throughout, and so
+this loop will have the desired effect of maintaining a constant density.
 
-This is the bulk of the simulation. The last bit is to just apply those position deltas to the
-particle's positions, and we'll have something that looks a bit like so:
+Note that we store these position deltas in an array for later processing. We don't want to move any
+particles before the other's have been processed. This is crucial, as we want the force between any
+two particles to be equal and opposite to each other.
+
+That's pretty much the entire simulation. We just need to apply those position deltas, and then
+re-run this loop and the previous loop a handful of times. Each step of gradient descent isn't all
+that accurate, but the more times it is run, the more accurate it becomes. Putting that all together
+gives us something like this:
 
 #html.elem("div", attrs: (class: "simulation", id: "simulation-naive-lambda"))
 
@@ -291,15 +325,26 @@ This is looking pretty good! The particles are reacting to each other, and makin
 substance. But it doesn't really look like water. To fix this, we've got to go fix that
 `density_error` I mentioned before.
 
+Also, I'm glossing over a _lot_ of tuning constants and such. If you want to recreate this
+yourself, I highly recommend taking a look at the paper I've linked, as well as my implementation on
+GitHub. The guts of the simulation itself are in this file:
+#link("https://github.com/macmv/fluid-sim/blob/main/fl-sim/src/lib.rs").
+
 == Improving the Simulation
 
-To fix the `density_error`, we can use the sum of the magnitude of the spiky gradient around each
-particle. While a bit of a mouthful, we can think of it as the amount that the particle is being
-pushed. If there's a particle right in between two others, the density won't be super high (because
-we have the poly6 kernel applied to the gradient). But, the spiky gradient will produce a large
-vector between the middle particle and each of it's neighbors. By using the magnitude of this spiky
-gradient, we can see that this particle is getting "pushed" strongly by it's neighbors, and so the
-density error should be higher.
+To fix the `density_error`, we need to fix the compressibility of the fluid. Water is not
+compressible, and we're trying to simulate something like water. The current `density_error` does
+not account for that. Instead, the particles at the bottom of the simulation are pushing outwards
+with the same force as the particles at the top of the simulation. But, the particles at the bottom
+are being squished by the particles above more, so they end up forming a denser mesh than the
+particles above. This is what makes the fluid feel so squishy in it's current state.
+
+The fix is to use the sum of the magnitude of the spiky gradient around each particle. While a bit
+of a mouthful, we can think of it as the amount that the particle is being pushed. If there's a
+particle right in between two others, the density won't be super high (because we have the poly6
+kernel for density). But, the spiky gradient will produce a large vector between the middle particle
+and each of it's neighbors. By using the magnitude of this spiky gradient, we can see that this
+particle is getting "pushed" strongly by it's neighbors, and so the density error should be higher.
 
 In code, that looks like modifying our first loop like so:
 ```rs
@@ -335,7 +380,7 @@ for particle in self.particles {
 ```
 
 We need to also add the gradient from this particle itself, so that's why we're computing both
-`gradient_sum` and `gradient_sum_squared`. But, if we use this new new density error, the simulation
+`gradient_sum` and `gradient_sum_squared`. If we use this new density error, the simulation
 immediately looks far better:
 
 #html.elem("div", attrs: (class: "simulation", id: "simulation-no-tensile"))
@@ -356,8 +401,9 @@ The tensile correction force I used looks like this:
 
 #html.elem("div", attrs: (class: "simulation", id: "graph-tensile"))
 
-While it's quite small, it still has the desired effect. We can add it into the `position_deltas`
-calculation like so:
+While it's quite small, it still has the desired effect. It'll always be negative, because it just
+pushes particles away from each other when they get too close. We can add it into the
+`position_deltas` calculation like so:
 
 ```rs
 let correction = tensile_correction(distance, self.radius);
@@ -371,3 +417,10 @@ total_position_delta +=
 And that makes the surface of the fluid behave much more smoothly:
 
 #html.elem("div", attrs: (class: "simulation", id: "simulation-with-tensile"))
+
+That's just about it. With tensile correction enabled, that's the complete simulation that I've been
+using. This produces good enough results for my purposes, and it is fast enough to run on a
+microcontroller. I would like the fluid to be a little more "splashy"---that is, I'd like to see
+more separated particles splash into the air when the fluid moves around. But it works well enough
+as is, and I still think it's pretty convincing, especially given that there are only 128 particles
+in these examples.
