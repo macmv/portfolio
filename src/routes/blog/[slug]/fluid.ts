@@ -1,20 +1,12 @@
 import * as d3 from "d3";
 import {
   createElement as createLucide,
-  Check,
   Pause,
-  RotateCw,
   Play,
   RotateCcw,
   StepForward,
 } from "lucide";
-import init, {
-  Sim,
-  Point,
-  kernel_poly6,
-  kernel_spiky_gradient,
-} from "../../../../fluid/pkg";
-import { mount } from "svelte";
+import { Sim, kernel_spiky_gradient } from "../../../../fluid/pkg";
 
 const width = 500;
 const height = 400;
