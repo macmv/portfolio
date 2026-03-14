@@ -159,9 +159,10 @@ discrete time steps, without losing accuracy over time. Specifically, for each p
 following code:
 
 ```rs
-particle.position = particle.position
-  + (particle.position - particle.prev_position)
-  + GRAVITY * DELTA_TIME * DELTA_TIME;
+let velocity = particle.position - particle.prev_position;
+let accel = GRAVITY * DELTA_TIME * DELTA_TIME;
+
+particle.position = particle.position + velocity + accel;
 ```
 
 `DELTA_TIME` is 1/60th of a second, as we are running this simulation at 60 frames per second.
