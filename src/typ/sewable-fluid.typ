@@ -14,9 +14,9 @@
 
 In this post, I'll go over making a fluid simulation that looks like this:
 
-#image("assets/sewable-fluid/title.png")
-
-And here's an interactive version:
+// #image("assets/sewable-fluid/title.png")
+//
+// And here's an interactive version:
 
 #html.elem("div", attrs: (class: "simulation", id: "simulation-demo"))
 
