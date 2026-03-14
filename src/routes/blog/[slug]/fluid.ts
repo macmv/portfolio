@@ -192,6 +192,7 @@ export const buildFluid = (
   pause.appendChild(playIcon);
   pause.onclick = () => {
     if (sim.paused) {
+      sim.paused = false;
       pause.replaceChildren(pauseIcon);
     } else {
       sim.paused = true;
