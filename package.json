@@ -9,7 +9,7 @@
     "wasm-fluid": "wasm-pack build ./fluid --target web",
     "dev": "vite",
     "build": "pnpm wasm && tsc -b && vite build",
-    "preview": "pnpm run build && wrangler dev",
+    "preview": "pnpm run build && vite preview",
     "deploy": "pnpm build && pnpm wrangler pages deploy"
   },
   "dependencies": {
