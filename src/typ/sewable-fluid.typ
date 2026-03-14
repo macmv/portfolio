@@ -18,19 +18,31 @@ In this post, I'll go over making a fluid simulation that looks like this:
 
 I'll cover the details of sewing it, what parts you'll need, and how to program it.
 
-The simulation itself revolves around a microcontroller. Specifically, I'm using the STM32F401CCU6.
-The important bits of that name are the "STM32," which is the type of microcontroller, and the "F4,"
-which is which class of microcontroller it is. The F4 class has native floating point instructions,
-which is why it's fast enough to simulate all of what's happening. The other main chip you'll need
-is an innertial measurement unit (IMU). The IMU I'm using is the MPU-6050, which is a widely
-available chip (at least at the time of writing). This IMU is a combined accelerometer and
-gyroscope. Only the accelerometer is used in the software for this chip. The microcontroller and IMU
-are attached with an I2C bus. I2C (Inter-Integrated Circuit) is a protocol that allows multiple
-chips to communicate with each other with two wires, as opposed to connecting up a bunch of wires
-for each signal, or individual wires for each chip. We're only going to use I2C to connect two chips
-in this circuit, but it's still convenient for this.
+= Electronics
 
-The circuit design we're going to build will look a bit like so:
+The simulation itself revolves around a mictrocontroller and an innertial measurement unit (IMU).
+The microcontroller runs the fluid simulation, and the IMU measures what direction gravity is in, so
+that the fluid flows downwards. The display is built out of a strip of neopixels, which are
+individually addressable LEDs.
+
+The microcontroller I'm using is the STM32F401CCU6. The important bits of that name are the "STM32,"
+which is the type of microcontroller, and the "F4," which is which class of microcontroller it is.
+The F4 class has native floating point instructions, which is why it's fast enough to run this
+entire simulation. The IMU I'm using  is the MPU-6050, which is a widely available chip (at least at
+the time of writing). This IMU is a combined accelerometer and gyroscope. Only the accelerometer is
+used in this project.
+
+== Wiring everything up
+
+The microcontroller and IMU are attached with an I2C bus. I2C (Inter-Integrated Circuit) is a
+protocol that allows multiple chips to communicate with each other with two wires, as opposed to
+connecting up a bunch of wires for each signal, or individual wires for each chip. We're only going
+to use I2C to connect two chips in this circuit, but it's still convenient for this.
+
+The neopixels use a different communication protocol that uses a single signal wire. This protocol
+is far less flexible than I2C, and so can only control a single strip of neopixels at a time.
+
+All that being said, the circuit we're going to build will look a bit like so:
 
 #center(circuiteria.circuit({
   import cetz: draw
@@ -42,7 +54,10 @@ The circuit design we're going to build will look a bit like so:
     w: 3, h: 2,
     x: -4, y: 0,
     fill: util.colors.blue,
-    ports: (east: ((id: "SCL", name: "SCL"), (id: "SDL", name: "SDL"))),
+    ports: (
+      east: ((id: "SCL", name: "SCL"), (id: "SDL", name: "SDL")),
+      south: ((id: "vbat", name: "VBAT"), (id: "gnd", name: "GND")),
+    ),
   )
 
   element.block(
@@ -53,14 +68,28 @@ The circuit design we're going to build will look a bit like so:
     ports: (
       west: ((id: "SCL", name: "SCL"), (id: "SDL", name: "SDL")),
       east: ((id: "GPIO0", name: "GPIO-0"),),
-      south: ((id: "vbat", name: "VBAT"), (id: "gnd", name: "GND")),
+      south: (
+        (id: "3v", name: "3.3v"),
+        (id: "vbat", name: "VBAT"),
+        (id: "gnd", name: "GND"),
+      ),
     ),
     fill: util.colors.green
   )
 
-  wire.stub("pi-port-vbat", "south", name: "+3.3v")
+  wire.stub("imu-port-gnd", "south", name: "-")
+
+  wire.stub("pi-port-vbat", "south", name: "+5v")
   wire.stub("pi-port-gnd", "south", name: "-")
 
+  wire.wire(
+    "w1",
+    ("imu-port-vbat", "pi-port-3v"),
+    style: "dodge",
+    dodge-sides: ("south", "south"),
+    dodge-margins: (0, 0),
+    dodge-y: -1.0,
+  )
   wire.wire("w1", ("imu-port-SCL", "pi-port-SCL"))
   wire.wire("w1", ("imu-port-SDL", "pi-port-SDL"))
 
@@ -82,7 +111,7 @@ The circuit design we're going to build will look a bit like so:
     wire.stub("l-" + str(i) + "-port-gnd", "south")
 
     if i == 0 {
-      wire.stub("l-" + str(i) + "-port-3v", "north", name: "+3.3v")
+      wire.stub("l-" + str(i) + "-port-3v", "north", name: "+5v")
       wire.stub("l-" + str(i) + "-port-gnd", "south", name: "-")
     }
 
@@ -105,11 +134,11 @@ The circuit design we're going to build will look a bit like so:
   wire.wire("w1", ("pi-port-GPIO0", "l-0-port-data-in"))
 }))
 
-Or, that is to say:
+Or for short:
 - We'll attach the IMU to the STM32 with two wires for the I2C connection.
 - We'll attach a single wire from the STM32 to the first LED, then that LED will be connected to the
   next, in a daisy chain.
-- Then everything will need a common ground and power supply.
+- The neopixels (in purple) run off 5v, and the STM32 can step down 5v to the 3.3v the IMU needs.
 
 = Particle-based Fluid Simulations
 
