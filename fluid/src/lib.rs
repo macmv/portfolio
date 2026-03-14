@@ -40,9 +40,9 @@ impl Sim {
 
   pub fn restart(&mut self) {
     let mut i = 0;
-    for y in 4..4 + 8 {
-      for x in 4..4 + 16 {
-        self.sim.set_particle(i, nalgebra::point![x as f32 / 4.0, y as f32 / 4.0]);
+    for y in 0..16 {
+      for x in 0..8 {
+        self.sim.set_particle(i, nalgebra::point![x as f32 / 2.0, y as f32 / 2.0]);
         i += 1;
       }
     }
