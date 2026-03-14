@@ -33,6 +33,11 @@
   let sims = [];
 
   const addSims = () => {
+    for (const sim of sims) {
+      sim.stop();
+    }
+    sims = [];
+
     sims.push(
       buildFluid(document.getElementById("simulation-demo"), {
         features: {
